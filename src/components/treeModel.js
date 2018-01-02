@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Popover, Button, message, Icon } from 'antd'
+import { Popover, Button, Icon } from 'antd'
 import firebase from 'firebase'
 
 export default class TreeModel extends Component {
@@ -12,7 +12,6 @@ export default class TreeModel extends Component {
     componentWillMount() {
         firebase.database().ref(`/tree/data/${this.props.tree}`)
         .on('value',(snap)=>{
-            console.log(snap.val())
             this.setState({treeData: snap.val(), loading: false})
         })
     }
@@ -31,7 +30,7 @@ export default class TreeModel extends Component {
     
     render() {
         const { loading, treeData } = this.state
-        const { posX, posY, x, y } = this.props
+        const { posX, posY } = this.props
         if ( loading ) {
             return <div><Icon type='loading' /> Loading...</div>
         }

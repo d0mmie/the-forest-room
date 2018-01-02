@@ -40,7 +40,7 @@ export default class BigMap extends React.Component {
 
     render () {
         return (
-            <div>
+            <div style={{display:'flex', justifyContent:'center'}} >
                 {this.state.loading ? null : <ImageMapper onClick={this.MapNivigate} src={this.state.mapUrl} map={this.state.map} width={704}  />}
             </div>
         )

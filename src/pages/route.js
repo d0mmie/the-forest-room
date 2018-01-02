@@ -2,6 +2,7 @@ import Tree from './routes/tree'
 import BigMap from './routes/bigMap'
 import PrimaryMap from './routes/primaryMap'
 import SecondaryMap from './routes/secondaryMap'
+import Search from './routes/search'
 
 export const Routes = [
     {
@@ -22,6 +23,11 @@ export const Routes = [
     {
         path: '/map/:primary/:secondary',
         component: SecondaryMap,
+        exact: true
+    },
+    {
+        path: '/search',
+        component: Search,
         exact: true
     }
 ]

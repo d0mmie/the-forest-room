@@ -104,8 +104,8 @@ export default class Tree extends React.Component {
                     <span style={{fontSize: '1.75em'}} >ต้นไม้</span>
                     <span style={{flex: 'auto'}} ></span>
                     <span>
-                        <Button type='primary' onClick={() => this.toggleDialog({type: 'CREATE'})} >สร้างต้นไม้</Button>
-                        <Button type='danger' onClick={this.deleteTree} >ลบ</Button>
+                        <Button style={{margin:3}} type='primary' onClick={() => this.toggleDialog({type: 'CREATE'})} >สร้างต้นไม้</Button>
+                        <Button style={{margin:3}} type='danger' onClick={this.deleteTree} >ลบ</Button>
                     </span>
                 </div>
                 <Table pagination={false} rowSelection={rowSelection} dataSource={this.state.allTree} columns={TableColumn} />

@@ -2,12 +2,10 @@ import React, { Component } from 'react'
 import { Icon } from 'antd'
 import TreeModel from '../../components/treeModel'
 // import ModalPlotting from './ModalPlotting'
-import PropTypes from 'prop-types'
 import firebase from 'firebase'
-import ImageMapper from '../../libs/ImageMapper'
 import PlotTreeDialog from '../../components/plotTreeDialog'
 import _ from 'lodash'
-import ReactDOM from 'react-dom'
+
 
 export default class secondaryMap extends Component {
   constructor (props) {
