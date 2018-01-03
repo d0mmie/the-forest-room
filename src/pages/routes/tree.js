@@ -46,7 +46,9 @@ export default class Tree extends React.Component {
     if (type === 'CREATE') {
       this.setState({createTreeDialog: !this.state.createTreeDialog})
     } else if (type === 'EDIT') {
-      this.setState({editTreeDialog: !this.state.editTreeDialog, selectedKey: key})
+      if (this.state.isAdmin) {
+        this.setState({editTreeDialog: !this.state.editTreeDialog, selectedKey: key})
+      }
     }
   }
 
@@ -97,7 +99,7 @@ export default class Tree extends React.Component {
       },
       {
         title: 'แก้ไข',
-        render: (text, record) => <Button onClick={() => this.toggleDialog({type: 'EDIT', key: record.key})} >แก้ไข</Button>
+        render: (text, record) => <Button disabled={!this.state.isAdmin} onClick={() => this.toggleDialog({type: 'EDIT', key: record.key})} >แก้ไข</Button>
       }
     ]
 
