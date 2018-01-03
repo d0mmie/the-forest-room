@@ -36,12 +36,13 @@ export default class BigMap extends React.Component {
         // console.log(this.props)
         this.props.history.push(MapInfo[a].path)
         console.log(MapInfo[a])
+        console.log(a)
     }
 
     render () {
         return (
-            <div>
-                {this.state.loading ? null : <ImageMapper onClick={this.MapNivigate} src={this.state.mapUrl} map={this.state.map} width={704}  />}
+            <div style={{display:'flex', justifyContent:'center'}} >
+                {this.state.loading ? null : <ImageMapper onImageClick={(e) => console.log(e.pageX - e.currentTarget.x, e.pageY - e.currentTarget.y)} onClick={this.MapNivigate} src={this.state.mapUrl} map={this.state.map} width={704}  />}
             </div>
         )
     }

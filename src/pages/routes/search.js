@@ -2,6 +2,7 @@ import React from 'react'
 import { Input, Table } from 'antd'
 import firebase from 'firebase'
 import _ from 'lodash'
+import { Link } from 'react-router-dom'
 
 const { Search } = Input
 
@@ -41,34 +42,46 @@ export default class SearchBox extends React.Component {
         const TableColumn = [
             {
                 title: 'รูป',
-                dataIndex: 'tree',
-                render: (text) => <img src={async() => { return await firebase.storage().ref(this.state.treeData[text].image).getDownloadURL() }} alt="" height={100} />
+                key:'img',
+                // dataIndex: '',
+                render: (text, record) => <img src={this.state.treeData[record.tree].image} alt="" height={100} />
         
             },
             {
                 title: 'ชื่อ',
-                dataIndex: 'tree',
-                render:(text) => <span>{this.state.treeData[text].name}</span>
+                key:'name',
+                // dataIndex: 'tree',
+                render:(text, record) => <span>{this.state.treeData[record.tree].name}</span>
         
             },
             {
                 title: "แผนที่ระดับกลาง",
+                key:'primary',
                 dataIndex: 'primary',
 
             },
             {
                 title: "แผนที่ระดับเล็ก",
+                key: 'secondary',
                 dataIndex: 'secondary'
+            },
+            {
+                title: 'ไป',
+                key:'go',
+                // dataIndex: 'tree',
+                render:(text,record) => <Link to={`/map/${record.primary}/${record.secondary}`} >ไป</Link>
             }
         ]
         return (
             <div style={{display:'flex', justifyContent:'center', flexDirection:'column'}} >
+            <div style={{display: 'flex', justifyContent: 'center'}} >
                 <Search
                     placeholder="ค้นหาต้นไม้"
                     onSearch={this.search}
                     style={{ width: 500 }}
-                    />
-            <Table columns={TableColumn} dataSource={this.state.searched} />
+                />
+            </div>
+            <Table pagination={false} columns={TableColumn} dataSource={this.state.searched} />
             </div>
         )
     }

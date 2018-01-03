@@ -3,10 +3,14 @@ import { Popover, Button, Icon } from 'antd'
 import firebase from 'firebase'
 
 export default class TreeModel extends Component {
-    state = {
-        open:false,
-        treeData:{},
-        loading: true
+    constructor(props) {
+        super(props)
+        this.state = {
+            open:false,
+            treeData:{},
+            loading: true
+        }
+        this.deletePlot = this.deletePlot.bind(this)
     }
     
     componentWillMount() {
@@ -16,17 +20,9 @@ export default class TreeModel extends Component {
         })
     }
 
-    // confirmDeletion = () => {
-    //     firebase.database().ref(`/map/${this.props.primaryMap}/secondaryMap/${this.props.secondaryMap}/coord/${this.props.indentify}/searchKey`).once('value').then((snap)=>{
-    //         firebase.database().ref(`/tree/${this.props.coord.type}/location/${snap.val()}`).remove()
-    //     })
-    //     .then(()=>{
-    //         firebase.database().ref(`/map/${this.props.primaryMap}/secondaryMap/${this.props.secondaryMap}/coord/${this.props.indentify}`).remove()
-    //     })
-    //     .then(()=>message.success('ลบสำเร็จ'))
-    //     .catch(()=>message.error('การลบผิดพลาด'))
-    //     .then(()=>this.setState({open:false}))
-    // }
+    deletePlot () {
+        firebase.database().ref(`/tree/location/${this.props.id}`).remove()
+    }
     
     render() {
         const { loading, treeData } = this.state
@@ -47,11 +43,11 @@ export default class TreeModel extends Component {
                         <p><b>ลักษณะ</b> : {treeData.detail}</p><br />
                         <p><b>ประวัติ</b> : {treeData.history}</p><br />
                         <p><b>สรรพคุณ</b> : {treeData.property}</p><br />
-                        <p><Button type="danger" >ลบ</Button></p>
+                        <p><Button type="danger" onClick={this.deletePlot} >ลบ</Button></p>
                     </div>
             }
             >
-                <div style={{position: 'absolute', left: posX , top: posY, padding:4, backgroundColor: treeData.legendColor, cursor:'pointer'}}></div>
+                <div style={{position: 'absolute', left: posX , top: posY+48, padding:4, backgroundColor: treeData.legendColor, cursor:'pointer'}}></div>
             </Popover>
         )
     }

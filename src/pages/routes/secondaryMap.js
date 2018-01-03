@@ -34,9 +34,9 @@ export default class secondaryMap extends Component {
           }
       })
       firebase.database().ref('/tree/location').on('value', (snap) => {
-          const _allTree = _.filter(snap.val(),{ primary, secondary })
-          const allTree = Object.keys(_allTree).map((key)=> ({ ..._allTree[key], id: key }))
-          this.setState({trees: allTree})
+        const allTree = Object.keys(snap.val()).map((key)=> ({ ...snap.val()[key], id: key }))
+        const _allTree = _.filter(allTree,{ primary, secondary })
+          this.setState({trees: _allTree})
       })
   }
 
@@ -50,18 +50,18 @@ export default class secondaryMap extends Component {
       if (loading) {
         return(<div><Icon type='loading' /> กำลังโหลด...</div>)
       }
-    return (
-      <div>
-          <img ref='imgX' src={url} alt="" width={700} onClick={this.plotting} />
-          {trees.map((data) => <TreeModel x={imgX} y= {imgY} {...data} key={data.id} />)}
-            <PlotTreeDialog
-                primary={primary}
-                posX={posX} posY={posY}
-                secondary={secondary}
-                visible={DialogOpen}
-                closeDialog={() => this.setState({ DialogOpen: false })} 
-            />
-      </div>
+      return (
+        <div>
+            <img src={url} alt="" width={700} onClick={this.plotting} />
+            {trees.map((data) => <TreeModel x={imgX} y= {imgY} {...data} key={data.id} />)}
+              <PlotTreeDialog
+                  primary={primary}
+                  posX={posX} posY={posY}
+                  secondary={secondary}
+                  visible={DialogOpen}
+                  closeDialog={() => this.setState({ DialogOpen: false })} 
+              />
+        </div>
     )
   }
 }

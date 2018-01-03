@@ -10,6 +10,7 @@ export default class Tree extends React.Component {
         super(props)
         this.state = {
             allTree: [],
+            isAdmin: false,
             selectedRowKeys: [],
             createTreeDialog:false,
             editTreeDialog:false,
@@ -27,6 +28,16 @@ export default class Tree extends React.Component {
                 this.setState({ allTree: ArrOfData })
             }else {
                 this.setState({ allTree: [] })
+            }
+        })
+
+        firebase.auth().onAuthStateChanged((user) => {
+            if(user){
+                firebase.database().ref(`/users/${user.uid}`).on('value', (snap) => {
+                    this.setState({isAdmin: snap.val().isAdmin})
+                })
+            }else {
+                this.setState({isAdmin: false})
             }
         })
     }
@@ -103,10 +114,10 @@ export default class Tree extends React.Component {
                 <div style={{display: 'flex', flexDirection: 'row'}} >
                     <span style={{fontSize: '1.75em'}} >ต้นไม้</span>
                     <span style={{flex: 'auto'}} ></span>
-                    <span>
+                    { this.state.isAdmin ? <span>
                         <Button style={{margin:3}} type='primary' onClick={() => this.toggleDialog({type: 'CREATE'})} >สร้างต้นไม้</Button>
                         <Button style={{margin:3}} type='danger' onClick={this.deleteTree} >ลบ</Button>
-                    </span>
+                    </span> : null }
                 </div>
                 <Table pagination={false} rowSelection={rowSelection} dataSource={this.state.allTree} columns={TableColumn} />
                 <CreateTreeDialog visible={this.state.createTreeDialog} closeDialog={this.closeDialog} />

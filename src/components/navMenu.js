@@ -21,13 +21,16 @@ export default class NavMenu extends React.Component {
         mode="horizontal"
       >
             <Menu.Item key="/">
-            <Icon type="home" />หน้าหลัก
+                <Icon type="home" />หน้าหลัก
             </Menu.Item>
             <Menu.Item key="/search">
-            <Icon type="search" />ค้นหา
+                <Icon type="search" />ค้นหา
             </Menu.Item>
             <Menu.Item key="/tree">
-            <Icon type="file-text" />รายชื่อต้นไม้
+                <Icon type="file-text" />รายชื่อต้นไม้
+            </Menu.Item>
+            <Menu.Item key="/login">
+                <Icon type="user" />โปรไฟล์
             </Menu.Item>
         </Menu>
         )

@@ -3,6 +3,7 @@ import BigMap from './routes/bigMap'
 import PrimaryMap from './routes/primaryMap'
 import SecondaryMap from './routes/secondaryMap'
 import Search from './routes/search'
+import Login from './routes/login'
 
 export const Routes = [
     {
@@ -28,6 +29,11 @@ export const Routes = [
     {
         path: '/search',
         component: Search,
+        exact: true
+    },
+    {
+        path: '/login',
+        component: Login,
         exact: true
     }
 ]
