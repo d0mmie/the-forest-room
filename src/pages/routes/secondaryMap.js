@@ -3,6 +3,7 @@ import { Icon } from 'antd'
 import firebase from 'firebase'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import qr from 'qrcode'
 
 import PlotTreeDialog from '../../components/plotTreeDialog'
 import TreeModel from '../../components/treeModel'
@@ -19,7 +20,8 @@ export default class secondaryMap extends Component {
       posY: '',
       DialogOpen: false,
       imgX: 0,
-      imgY: 0
+      imgY: 0,
+      qrcode: ''
     }
     this.plotting = this.plotting.bind(this)
   }
@@ -37,6 +39,9 @@ export default class secondaryMap extends Component {
       const allTree = _.filter(_allTree, { primary, secondary })
       this.setState({trees: allTree})
     })
+    qr.toDataURL(`https://theforestroom.xyz${this.props.match.url}`).then((url) => {
+      this.setState({qrcode: url})
+    })
   }
 
   plotting (e) {
@@ -50,8 +55,17 @@ export default class secondaryMap extends Component {
       return <div><Icon type='loading' /> กำลังโหลด...</div>
     }
     return (
-      <div>
-        <img src={url} alt='' width={700} onClick={this.plotting} />
+      <div >
+        <div style={{display: 'flex', flexDirection: 'row'}} >
+          <div>
+            <img src={url} alt='' width={700} onClick={this.plotting} />
+          </div>
+          <div style={{ paddingLeft: 10, paddingRight: 10 }} >
+            <p>แผนที่ระดับกลางที่ : {primary}</p>
+            <p>แผนที่เล็กที่ : {secondary}</p>
+            <p><img src={this.state.qrcode} alt='' /></p>
+          </div>
+        </div>
         {
           trees.map((data) => <TreeModel x={imgX} y={imgY} {...data} key={data.id} />)
         }
