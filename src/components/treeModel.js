@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Popover, Button, Icon } from 'antd'
+import { Popover, Button } from 'antd'
 import firebase from 'firebase'
 import PropTypes from 'prop-types'
 
@@ -28,7 +28,7 @@ export default class TreeModel extends Component {
     const { loading, treeData } = this.state
     const { posX, posY } = this.props
     if (loading) {
-      return <div><Icon type='loading' /> Loading...</div>
+      return null
     }
     return (
       <Popover
