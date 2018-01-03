@@ -45,7 +45,7 @@ export default class PrimaryMap extends React.Component {
 
   render () {
     if (this.state.loading) {
-      return <div><Icon type='loading' /> Loading...</div>
+      return <div><Icon type='loading' /> กำลังโหลด...</div>
     }
     return (
       <div style={{display: 'flex', justifyContent: 'center'}} >
