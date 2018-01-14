@@ -1,10 +1,43 @@
-import BigMap from './routes/bigMap'
-import Login from './routes/login'
-import PrimaryMap from './routes/primaryMap'
-import Search from './routes/search'
-import SecondaryMap from './routes/secondaryMap'
-import Tree from './routes/tree'
-import TreeDetail from './routes/treeDetail'
+import { Icon } from 'antd'
+import L from 'react-loadable'
+import React from 'react'
+
+const Loading = () => (
+  <div><Icon type='loading' /> Loading...</div>
+)
+
+const Loadable = opts => L({
+  loading: Loading,
+  ...opts
+})
+
+const BigMap = Loadable({
+  loader: () => import(/* webpackChunkName: "BigMap" */ './routes/bigMap')
+})
+
+const Login = Loadable({
+  loader: () => import(/* webpackChunkName: "Profile" */ './routes/login')
+})
+
+const PrimaryMap = Loadable({
+  loader: () => import(/* webpackChunkName: "PrimaryMap" */ './routes/primaryMap')
+})
+
+const Search = Loadable({
+  loader: () => import(/* webpackChunkName: "Search" */ './routes/search')
+})
+
+const SecondaryMap = Loadable({
+  loader: () => import(/* webpackChunkName: "SecondaryMap" */ './routes/secondaryMap')
+})
+
+const Tree = Loadable({
+  loader: () => import(/* webpackChunkName: "Tree" */ './routes/tree')
+})
+
+const TreeDetail = Loadable({
+  loader: () => import(/* webpackChunkName: "TreeDetail" */ './routes/treeDetail')
+})
 
 export const Routes = [
   {

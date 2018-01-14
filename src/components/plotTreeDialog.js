@@ -51,7 +51,14 @@ export default class PlotTreeDialog extends React.Component {
       >
         <p>ตำแหน่งแกน X : {posX}</p>
         <p>ตำแหน่งแกน Y : {posY}</p>
-        <div>ต้นไม่ &nbsp;<Select onSelect={(e) => this.setState({ selectedKey: e })} value={this.state.selectedKey} defaultValue={Object.keys(this.state.tree)[0]} >{Object.keys(this.state.tree).map((key) => <Option key={key} value={key}>{this.state.tree[key].name}</Option>)}</Select> </div>
+        <div>ต้นไม้ &nbsp;
+          <Select
+            onSelect={(e) => this.setState({ selectedKey: e })}
+            defaultValue={Object.keys(this.state.tree)[0]}
+          >
+            { Object.keys(this.state.tree).map((key) => <Option key={key} value={key}>{this.state.tree[key].name}</Option>) }
+          </Select>
+        </div>
       </Modal>
     )
   }
