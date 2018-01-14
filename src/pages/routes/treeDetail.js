@@ -1,6 +1,7 @@
-import React from 'react'
-import PropTypes from 'prop-types'
 import firebase from 'firebase'
+import PropTypes from 'prop-types'
+import qr from 'qrcode'
+import React from 'react'
 
 export default class TreeDetail extends React.Component {
   constructor (props) {
@@ -12,7 +13,8 @@ export default class TreeDetail extends React.Component {
         detail: 'Loading...',
         history: 'Loading...',
         property: 'Loading...'
-      }
+      },
+      qrcode: ''
     }
   }
   componentWillMount () {
@@ -21,6 +23,9 @@ export default class TreeDetail extends React.Component {
         console.log(snap.val())
         this.setState({tree: snap.val()})
       }
+    })
+    qr.toDataURL(`https://theforestroom.xyz${this.props.match.url}`).then((url) => {
+      this.setState({qrcode: url})
     })
   }
 
@@ -36,6 +41,10 @@ export default class TreeDetail extends React.Component {
         <p><b>ลักษณะ:</b> {tree.detail}</p>
         <p><b>ประวัติ:</b> {tree.history}</p>
         <p><b>สรรพคุณ:</b> {tree.property}</p>
+        <p><b>QRCODE</b> {'(เพื่อเข้าสู่หน้านี้)'}</p>
+        <div>
+          <img src={this.state.qrcode} alt='QRCODE' />
+        </div>
       </div>
     )
   }

@@ -1,9 +1,9 @@
 import _ from 'lodash'
 import { Icon } from 'antd'
 import firebase from 'firebase'
-import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import qr from 'qrcode'
+import React, { Component } from 'react'
 
 import PlotTreeDialog from '../../components/plotTreeDialog'
 import TreeModel from '../../components/treeModel'

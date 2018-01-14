@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
 import { Popover, Button } from 'antd'
 import firebase from 'firebase'
 import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 
 export default class TreeModel extends Component {
   constructor (props) {

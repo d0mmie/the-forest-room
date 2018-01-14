@@ -1,6 +1,7 @@
 import { Button } from 'antd'
 import firebase from 'firebase'
 import React from 'react'
+
 import ProfilePanel from '../../components/profilePanel'
 
 export default class Login extends React.Component {

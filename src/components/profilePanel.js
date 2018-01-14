@@ -1,6 +1,6 @@
-import React from 'react'
 import { Button } from 'antd'
 import PropTypes from 'prop-types'
+import React from 'react'
 
 export default class ProfilePanel extends React.Component {
   render () {
