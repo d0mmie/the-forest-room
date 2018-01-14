@@ -1,6 +1,7 @@
 import { Table, Button } from 'antd'
 import firebase from 'firebase'
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 import CreateTreeDialog from '../../components/createTreeDialog'
 import UpdateTreeDialog from '../../components/editTreeDialog'
@@ -34,7 +35,11 @@ export default class Tree extends React.Component {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         firebase.database().ref(`/users/${user.uid}`).on('value', (snap) => {
-          this.setState({isAdmin: snap.val().isAdmin})
+          if (snap.val()) {
+            this.setState({isAdmin: snap.val().isAdmin})
+          } else {
+            this.setState({isAdmin: false})
+          }
         })
       } else {
         this.setState({isAdmin: false})
@@ -71,7 +76,8 @@ export default class Tree extends React.Component {
       },
       {
         title: 'ชื่อ',
-        dataIndex: 'name'
+        dataIndex: 'name',
+        render: (text, record) => <Link to={`/tree/${record.key}`} >{text}</Link>
       },
       {
         title: 'ชื่อวิทยาศาสตร์',
@@ -110,7 +116,7 @@ export default class Tree extends React.Component {
     }
     return (
       <div>
-        <div style={{display: 'flex', flexDirection: 'row'}} >
+        <div style={{display: 'flex', flexDirection: 'row', margin: 15}} >
           <span style={{fontSize: '1.75em'}} >ต้นไม้</span>
           <span style={{flex: 'auto'}} />
           { this.state.isAdmin

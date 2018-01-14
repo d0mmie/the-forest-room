@@ -30,7 +30,7 @@ export default class NavMenu extends React.Component {
         <Menu.Item key='/tree'>
           <Icon type='file-text' />{'รายชื่อต้นไม้'}
         </Menu.Item>
-        <Menu.Item key='/login'>
+        <Menu.Item key='/profile'>
           <Icon type='user' />{'โปรไฟล์'}
         </Menu.Item>
       </Menu>

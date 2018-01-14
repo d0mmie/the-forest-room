@@ -3,3 +3,16 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+::-webkit-scrollbar {
+  width: 4px;
+  background-color: #e9ebee;
+  transition-duration: .05s;
+  border-radius: 2px;
+}
+::-webkit-scrollbar:hover{
+background-color: #CFCFCF;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #A6A6A6;
+  border-radius: 2px;
+}

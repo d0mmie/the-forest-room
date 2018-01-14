@@ -26,7 +26,7 @@ export default class TreeModel extends Component {
 
   render () {
     const { loading, treeData } = this.state
-    const { posX, posY } = this.props
+    const { posX, posY, tree } = this.props
     if (loading) {
       return null
     }
@@ -47,7 +47,7 @@ export default class TreeModel extends Component {
           </div>
         }
       >
-        <div style={{position: 'absolute', left: posX, top: posY + 48, padding: 4, backgroundColor: treeData.legendColor, cursor: 'pointer'}} />
+        <div onClick={() => this.props.history.push(`/tree/${tree}`)} style={{position: 'absolute', left: posX, top: posY + 48, padding: 4, backgroundColor: treeData.legendColor, cursor: 'pointer'}} />
       </Popover>
     )
   }
@@ -57,5 +57,6 @@ TreeModel.propTypes = {
   tree: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   posX: PropTypes.number,
-  posY: PropTypes.number
+  posY: PropTypes.number,
+  history: PropTypes.object
 }

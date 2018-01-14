@@ -21,12 +21,14 @@ export default class secondaryMap extends Component {
       DialogOpen: false,
       imgX: 0,
       imgY: 0,
-      qrcode: ''
+      qrcode: '',
+      isAdmin: false
     }
     this.plotting = this.plotting.bind(this)
   }
 
   componentWillMount () {
+    console.log(this.props)
     const { primary, secondary } = this.props.match.params
     firebase.database().ref(`/map/${primary}/${secondary}`).on('value', async (snap) => {
       if (snap.val()) {
@@ -39,13 +41,26 @@ export default class secondaryMap extends Component {
       const allTree = _.filter(_allTree, { primary, secondary })
       this.setState({trees: allTree})
     })
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        firebase.database().ref(`/users/${user.uid}`).on('value', (snap) => {
+          if (snap.val()) {
+            this.setState({isAdmin: snap.val().isAdmin})
+          }
+        })
+      } else {
+        this.setState({isAdmin: false})
+      }
+    })
     qr.toDataURL(`https://theforestroom.xyz${this.props.match.url}`).then((url) => {
       this.setState({qrcode: url})
     })
   }
 
   plotting (e) {
-    this.setState({posX: e.pageX - e.currentTarget.x, posY: e.pageY - e.currentTarget.y, DialogOpen: true})
+    if (this.state.isAdmin) {
+      this.setState({posX: e.pageX - e.currentTarget.x, posY: e.pageY - e.currentTarget.y, DialogOpen: true})
+    }
   }
 
   render () {
@@ -67,7 +82,7 @@ export default class secondaryMap extends Component {
           </div>
         </div>
         {
-          trees.map((data) => <TreeModel x={imgX} y={imgY} {...data} key={data.id} />)
+          trees.map((data) => <TreeModel history={this.props.history} x={imgX} y={imgY} {...data} key={data.id} />)
         }
         <PlotTreeDialog
           primary={primary}
@@ -82,5 +97,6 @@ export default class secondaryMap extends Component {
 }
 
 secondaryMap.propTypes = {
-  match: PropTypes.object.isRequired
+  match: PropTypes.object.isRequired,
+  history: PropTypes.object
 }
