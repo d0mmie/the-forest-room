@@ -1,4 +1,4 @@
-import { Modal, Select } from 'antd'
+import { Modal, Select, message } from 'antd'
 import firebase from 'firebase'
 import React from 'react'
 import PropTypes from 'prop-types'
@@ -10,7 +10,8 @@ export default class PlotTreeDialog extends React.Component {
     super(props)
     this.state = {
       tree: [],
-      selectedKey: ''
+      selectedKey: '',
+      seleted: false
     }
     this.plot = this.plot.bind(this)
   }
@@ -30,15 +31,19 @@ export default class PlotTreeDialog extends React.Component {
   }
 
   plot () {
-    firebase.database().ref('/tree/location').push({
-      tree: this.state.selectedKey,
-      primary: this.props.primary,
-      secondary: this.props.secondary,
-      posX: this.props.posX,
-      posY: this.props.posY
-    }).then(() => {
-      this.props.closeDialog()
-    })
+    if (this.state.seleted) {
+      firebase.database().ref('/tree/location').push({
+        tree: this.state.selectedKey,
+        primary: this.props.primary,
+        secondary: this.props.secondary,
+        posX: this.props.posX,
+        posY: this.props.posY
+      }).then(() => {
+        this.props.closeDialog()
+      })
+    } else {
+      message.error('กรุณาเลือกต้นไม้')
+    }
   }
 
   render () {
@@ -53,8 +58,8 @@ export default class PlotTreeDialog extends React.Component {
         <p>ตำแหน่งแกน Y : {posY}</p>
         <div>ต้นไม้ &nbsp;
           <Select
-            onSelect={(e) => this.setState({ selectedKey: e })}
-            defaultValue={Object.keys(this.state.tree)[0]}
+            onSelect={(e) => this.setState({ selectedKey: e, seleted: true })}
+            defaultValue='เลือก...'
           >
             { Object.keys(this.state.tree).map((key) => <Option key={key} value={key}>{this.state.tree[key].name}</Option>) }
           </Select>

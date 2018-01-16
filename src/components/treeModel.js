@@ -47,7 +47,15 @@ export default class TreeModel extends Component {
           </div>
         }
       >
-        <div onClick={() => this.props.history.push(`/tree/${tree}`)} style={{position: 'absolute', left: posX, top: posY + 48, padding: 4, backgroundColor: treeData.legendColor, cursor: 'pointer'}} />
+        <div
+          onClick={() => this.props.history.push(`/tree/${tree}`)}
+          style={{
+            position: 'absolute',
+            left: posX + 2,
+            top: posY + 50,
+            padding: 4,
+            backgroundColor: treeData.legendColor,
+            cursor: 'pointer'}} />
       </Popover>
     )
   }

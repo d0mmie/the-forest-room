@@ -8,27 +8,27 @@ import React, { Component } from 'react'
 import PlotTreeDialog from '../../components/plotTreeDialog'
 import TreeModel from '../../components/treeModel'
 
-export default class secondaryMap extends Component {
+export default class SecondaryMap extends Component {
   constructor (props) {
     super(props)
     this.state = {
       trees: [],
       loading: true,
-      map: {},
       url: '',
       posX: '',
       posY: '',
-      DialogOpen: false,
+      dialogOpen: false,
       imgX: 0,
       imgY: 0,
       qrcode: '',
-      isAdmin: false
+      isAdmin: false,
+      imgPosX: 0,
+      imgPosY: 0
     }
     this.plotting = this.plotting.bind(this)
   }
 
-  componentWillMount () {
-    console.log(this.props)
+  componentDidMount () {
     const { primary, secondary } = this.props.match.params
     firebase.database().ref(`/map/${primary}/${secondary}`).on('value', async (snap) => {
       if (snap.val()) {
@@ -55,16 +55,17 @@ export default class secondaryMap extends Component {
     qr.toDataURL(`https://theforestroom.xyz${this.props.match.url}`).then((url) => {
       this.setState({qrcode: url})
     })
+    this.state.mapImg && this.setState({mapImg: this.refs.map})
   }
 
   plotting (e) {
     if (this.state.isAdmin) {
-      this.setState({posX: e.pageX - e.currentTarget.x, posY: e.pageY - e.currentTarget.y, DialogOpen: true})
+      this.setState({posX: e.pageX - e.currentTarget.x, posY: e.pageY - e.currentTarget.y, dialogOpen: true})
     }
   }
 
   render () {
-    const { loading, url, DialogOpen, posX, posY, trees, imgX, imgY } = this.state
+    const { loading, url, dialogOpen, posX, posY, trees, imgX, imgY } = this.state
     const { primary, secondary } = this.props.match.params
     if (loading) {
       return <div><Icon type='loading' /> กำลังโหลด...</div>
@@ -73,7 +74,12 @@ export default class secondaryMap extends Component {
       <div >
         <div style={{display: 'flex', flexDirection: 'row'}} >
           <div>
-            <img src={url} alt='' width={700} onClick={this.plotting} />
+            <img
+              src={url}
+              alt={url}
+              width={700}
+              onClick={this.plotting}
+            />
           </div>
           <div style={{ paddingLeft: 10, paddingRight: 10 }} >
             <p>แผนที่ระดับกลางที่ : {primary}</p>
@@ -88,15 +94,15 @@ export default class secondaryMap extends Component {
           primary={primary}
           posX={posX} posY={posY}
           secondary={secondary}
-          visible={DialogOpen}
-          closeDialog={() => this.setState({ DialogOpen: false })}
+          visible={dialogOpen}
+          closeDialog={() => this.setState({ dialogOpen: false })}
         />
       </div>
     )
   }
 }
 
-secondaryMap.propTypes = {
+SecondaryMap.propTypes = {
   match: PropTypes.object.isRequired,
   history: PropTypes.object
 }
