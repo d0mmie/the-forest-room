@@ -37,9 +37,11 @@ export default class SecondaryMap extends Component {
       }
     })
     firebase.database().ref('/tree/location').on('value', (snap) => {
-      const _allTree = Object.keys(snap.val()).map((key) => ({ ...snap.val()[key], id: key }))
-      const allTree = _.filter(_allTree, { primary, secondary })
-      this.setState({trees: allTree})
+      if (snap.val()) {
+        const _allTree = Object.keys(snap.val()).map((key) => ({ ...snap.val()[key], id: key }))
+        const allTree = _.filter(_allTree, { primary, secondary })
+        this.setState({trees: allTree})
+      }
     })
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
