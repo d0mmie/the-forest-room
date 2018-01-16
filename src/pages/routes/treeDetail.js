@@ -2,6 +2,16 @@ import firebase from 'firebase'
 import PropTypes from 'prop-types'
 import qr from 'qrcode'
 import React from 'react'
+import styles from 'styled-components'
+
+const TreeImg = styles.img`
+  height: 400px;
+
+  @media only screen and (max-width: 768px) {
+    width: 100%;
+    height: 100%;
+  }
+`
 
 export default class TreeDetail extends React.Component {
   constructor (props) {
@@ -35,7 +45,7 @@ export default class TreeDetail extends React.Component {
       <div style={{margin: 20}} >
         <h1>{tree.name}</h1>
         <p>&nbsp;</p>
-        <div style={{display: 'flex', justifyContent: 'center'}} ><img src={tree.image} style={{height: '400'}} alt={tree.name} /></div>
+        <div style={{display: 'flex', justifyContent: 'center'}} ><TreeImg src={tree.image} alt={tree.name} /></div>
         <p>&nbsp;</p>
         <p><b>ชื่อวิทยาศาสตร์:</b> <i>{tree.scienceName}</i></p>
         <p><b>ลักษณะ:</b> {tree.detail}</p>
