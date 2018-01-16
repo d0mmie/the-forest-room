@@ -15,8 +15,8 @@ const BigMap = Loadable({
   loader: () => import(/* webpackChunkName: "BigMap" */ './routes/bigMap')
 })
 
-const Login = Loadable({
-  loader: () => import(/* webpackChunkName: "Profile" */ './routes/login')
+const Profile = Loadable({
+  loader: () => import(/* webpackChunkName: "Profile" */ './routes/profile')
 })
 
 const PrimaryMap = Loadable({
@@ -72,7 +72,7 @@ export const Routes = [
   },
   {
     path: '/profile',
-    component: Login,
+    component: Profile,
     exact: true
   }
 ]
