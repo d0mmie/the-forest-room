@@ -1,4 +1,4 @@
-import { Modal, Select, message } from 'antd'
+import { Modal, Select } from 'antd'
 import firebase from 'firebase'
 import React from 'react'
 import PropTypes from 'prop-types'

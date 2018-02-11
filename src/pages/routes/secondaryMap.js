@@ -1,9 +1,10 @@
 import _ from 'lodash'
-import { Card, Switch } from 'antd'
+import { Card, Switch, List } from 'antd'
 import firebase from 'firebase'
 import PropTypes from 'prop-types'
 import qr from 'qrcode'
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 import connect from '../../store/action'
 import PlotTreeDialog from '../../components/plotTreeDialog'
@@ -15,7 +16,8 @@ class SecondaryMap extends Component {
     this.state = {
       trees: [],
       url: '',
-      qrcode: ''
+      qrcode: '',
+      treeGroupDataSource: {}
     }
     this.plotting = this.plotting.bind(this)
   }
@@ -38,8 +40,10 @@ class SecondaryMap extends Component {
       const { primary, secondary } = nextProps.match.params
       const _allTree = Object.keys(nextProps.store.tree.location).map((key) => ({ ...nextProps.store.tree.location[key], id: key }))
       const allTree = _.filter(_allTree, { primary, secondary })
+      const treeGroup = _.groupBy(allTree, 'tree')
+      const treeGroupDataSource = Object.keys(treeGroup).map((key) => { return { ...nextProps.store.tree.data[key], amount: treeGroup[key].length, id: key } })
       const url = await firebase.storage().ref(nextProps.store.maps.data[nextProps.match.params.primary][nextProps.match.params.secondary][nextProps.store.maps.mock ? 'imgPathMock' : 'imgPath']).getDownloadURL()
-      this.setState({url, trees: allTree})
+      this.setState({url, trees: allTree, treeGroupDataSource})
     }
   }
 
@@ -78,6 +82,19 @@ class SecondaryMap extends Component {
             </p>
             <p><b>QRCODE</b>(เพื่อเข้าสู่หน้านี้)</p>
             <p><img src={this.state.qrcode} alt='' /></p>
+            <p>ชนิดของต้นไม้ในพิ้นที่</p>
+            <List
+              itemLayout='horizontal'
+              dataSource={this.state.treeGroupDataSource}
+              renderItem={item => (
+                <List.Item>
+                  <List.Item.Meta
+                    title={<Link to={`/tree/${item.id}`} >{item.name}</Link>}
+                    description={`จำนวน ${item.amount} ต้น`}
+                  />
+                </List.Item>
+              )}
+            />
           </Card>
         </div>
         {
