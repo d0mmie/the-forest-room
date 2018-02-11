@@ -4,6 +4,8 @@ import './index.css'
 import App from './App'
 import registerServiceWorker from './registerServiceWorker'
 import firebase from 'firebase'
+import store from './store'
+import { Provider } from 'react-redux'
 
 const config = {
   apiKey: 'AIzaSyDvf82RVmyi8V8GJIC8UVkCsNJ9Isrigak',
@@ -16,5 +18,5 @@ const config = {
 
 firebase.initializeApp(config)
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'))
 registerServiceWorker()

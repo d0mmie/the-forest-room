@@ -1,8 +1,8 @@
-import firebase from 'firebase'
 import PropTypes from 'prop-types'
 import qr from 'qrcode'
 import React from 'react'
 import styles from 'styled-components'
+import connect from '../../store/action'
 
 const TreeImg = styles.img`
   height: 400px;
@@ -13,45 +13,36 @@ const TreeImg = styles.img`
   }
 `
 
-export default class TreeDetail extends React.Component {
+class TreeDetail extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      tree: {
-        name: 'Loading...',
-        scienceName: 'Loading...',
-        detail: 'Loading...',
-        history: 'Loading...',
-        property: 'Loading...'
-      },
       qrcode: ''
     }
   }
   componentWillMount () {
-    firebase.database().ref(`/tree/data/${this.props.match.params.treeId}`).on('value', (snap) => {
-      if (snap.val()) {
-        console.log(snap.val())
-        this.setState({tree: snap.val()})
-      }
-    })
+    this.props.loadTree()
     qr.toDataURL(`https://theforestroom.xyz${this.props.match.url}`).then((url) => {
       this.setState({qrcode: url})
     })
   }
 
   render () {
-    const { tree } = this.state
+    const { store, match } = this.props
+    if (this.props.store.tree.loading) {
+      return <div>Loading...</div>
+    }
     return (
       <div style={{margin: 20}} >
-        <h1>{tree.name}</h1>
+        <h1>{store.tree.data[match.params.treeId].name}</h1>
         <p>&nbsp;</p>
-        <div style={{display: 'flex', justifyContent: 'center'}} ><TreeImg src={tree.image} alt={tree.name} /></div>
+        <div style={{display: 'flex', justifyContent: 'center'}} ><TreeImg src={store.tree.data[match.params.treeId].image} alt={store.tree.data[match.params.treeId].name} /></div>
         <p>&nbsp;</p>
-        <p><b>ชื่อวิทยาศาสตร์:</b> <i>{tree.scienceName}</i></p>
-        <p><b>ลักษณะ:</b> {tree.detail}</p>
-        <p><b>ประวัติ:</b> {tree.history}</p>
-        <p><b>สรรพคุณ:</b> {tree.property}</p>
-        <p><b>QRCODE</b> {'(เพื่อเข้าสู่หน้านี้)'}</p>
+        <p><b>{'ชื่อวิทยาศาสตร์:'}</b> <i>{store.tree.data[match.params.treeId].scienceName}</i></p>
+        <p><b>{'ลักษณะ:'}</b> {store.tree.data[match.params.treeId].detail}</p>
+        <p><b>{'ประวัติ:'}</b> {store.tree.data[match.params.treeId].history}</p>
+        <p><b>{'สรรพคุณ:'}</b> {store.tree.data[match.params.treeId].property}</p>
+        <p><b>{'QRCODE'}</b> {'(เพื่อเข้าสู่หน้านี้)'}</p>
         <div>
           <img src={this.state.qrcode} alt='QRCODE' />
         </div>
@@ -61,5 +52,9 @@ export default class TreeDetail extends React.Component {
 }
 
 TreeDetail.propTypes = {
-  match: PropTypes.object.isRequired
+  match: PropTypes.object.isRequired,
+  store: PropTypes.object.isRequired,
+  loadTree: PropTypes.func.isRequired
 }
+
+export default connect(TreeDetail)

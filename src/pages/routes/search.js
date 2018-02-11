@@ -1,55 +1,49 @@
 import React from 'react'
 import { Input, Table } from 'antd'
-import firebase from 'firebase'
 import _ from 'lodash'
 import { Link } from 'react-router-dom'
+import connect from '../../store/action'
+import PropTypes from 'prop-types'
 
 const { Search } = Input
 
-export default class SearchBox extends React.Component {
+class SearchBox extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
       allTree: [],
-      searched: [],
-      treeData: {}
+      searched: []
     }
     this.search = this.search.bind(this)
   }
 
   componentWillMount () {
-    firebase.database().ref('/tree/location').on('value', (snap) => {
-      if (snap.val()) {
-        const allTree = Object.keys(snap.val()).map((key) => ({ ...snap.val()[key], id: key }))
-        this.setState({allTree})
-      } else {
-        this.setState({allTree: []})
-      }
-    })
-    firebase.database().ref('/tree/data').on('value', (snap) => {
-      if (snap.val()) {
-        this.setState({treeData: snap.val()})
-      } else {
-        this.setState({treeData: []})
-      }
-    })
+    this.props.loadTree()
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.store.tree.loading === false) {
+      const allTree = Object.keys(nextProps.store.tree.location).map((key) => ({ ...nextProps.store.tree.location[key], id: key }))
+      this.setState({allTree})
+    }
   }
 
   search (keyword) {
-    const searched = _.filter(this.state.allTree, (o) => { return _.startsWith(this.state.treeData[o.tree].name, keyword) })
+    const searched = _.filter(this.state.allTree, (o) => { return _.startsWith(this.props.store.tree.data[o.tree].name, keyword) })
     this.setState({searched})
   }
   render () {
+    const { store } = this.props
     const TableColumn = [
       {
         title: 'รูป',
         key: 'img',
-        render: (text, record) => <img src={this.state.treeData[record.tree].image} alt='' height={100} />
+        render: (text, record) => <img src={store.tree.data[record.tree].image} alt='' height={100} />
       },
       {
         title: 'ชื่อ',
         key: 'name',
-        render: (text, record) => <span>{this.state.treeData[record.tree].name}</span>
+        render: (text, record) => <span>{store.tree.data[record.tree].name}</span>
       },
       {
         title: 'แผนที่ระดับกลาง',
@@ -82,3 +76,10 @@ export default class SearchBox extends React.Component {
     )
   }
 }
+
+SearchBox.propTypes = {
+  store: PropTypes.object.isRequired,
+  loadTree: PropTypes.func.isRequired
+}
+
+export default connect(SearchBox)

@@ -3,45 +3,20 @@ import firebase from 'firebase'
 import React from 'react'
 
 import ProfilePanel from '../../components/profilePanel'
+import connect from '../../store/action'
+import PropTypes from 'prop-types'
 
-export default class Login extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      isLogin: false,
-      user: {},
-      isAdmin: false
-    }
-  }
-
-  componentWillMount () {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        firebase.database().ref(`/users/${user.uid}`).on('value', (snap) => {
-          if (snap.val()) {
-            this.setState({isLogin: true, user, isAdmin: snap.val().isAdmin})
-          }
-        })
-      } else {
-        this.setState({isLogin: false, user: {}, isAdmin: false})
-      }
-    })
-  }
-
+class Profile extends React.Component {
   loginWithGmail () {
     firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
-  }
-
-  signout () {
-    firebase.auth().signOut()
   }
 
   render () {
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }} >
         {
-          this.state.isLogin
-            ? <ProfilePanel user={this.state.user} admin={this.state.isAdmin} signout={this.signout} />
+          this.props.store.user.isLogin
+            ? <ProfilePanel user={this.props.store.user.data} admin={this.props.store.user.data.isAdmin} signout={this.props.logout} />
             : <div>
               <Button style={{margin: 4}} icon='google' size='large' onClick={this.loginWithGmail} >เข้าสู่ระบบด้วย Gmail</Button>
             </div>
@@ -50,3 +25,10 @@ export default class Login extends React.Component {
     )
   }
 }
+
+Profile.propTypes = {
+  store: PropTypes.object.isRequired,
+  logout: PropTypes.func.isRequired
+}
+
+export default connect(Profile)

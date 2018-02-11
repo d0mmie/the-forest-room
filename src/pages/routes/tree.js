@@ -2,16 +2,17 @@ import { Link } from 'react-router-dom'
 import { Table, Button } from 'antd'
 import firebase from 'firebase'
 import React from 'react'
+import PropTypes from 'prop-types'
 
+import connect from '../../store/action'
 import CreateTreeDialog from '../../components/createTreeDialog'
 import UpdateTreeDialog from '../../components/editTreeDialog'
 
-export default class Tree extends React.Component {
+class Tree extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
       allTree: [],
-      isAdmin: false,
       selectedRowKeys: [],
       createTreeDialog: false,
       editTreeDialog: false,
@@ -23,35 +24,18 @@ export default class Tree extends React.Component {
   }
 
   componentWillMount () {
-    firebase.database().ref('/tree/data').on('value', (snap) => {
-      if (snap.val()) {
-        const ArrOfData = Object.keys(snap.val()).map((key) => ({...snap.val()[key], key}))
-        this.setState({ allTree: ArrOfData })
-      } else {
-        this.setState({ allTree: [] })
-      }
-    })
-
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        firebase.database().ref(`/users/${user.uid}`).on('value', (snap) => {
-          if (snap.val()) {
-            this.setState({isAdmin: snap.val().isAdmin})
-          } else {
-            this.setState({isAdmin: false})
-          }
-        })
-      } else {
-        this.setState({isAdmin: false})
-      }
-    })
+    this.props.loadTree()
+  }
+  componentWillReceiveProps (nextProps) {
+    const tree = Object.keys(nextProps.store.tree.data).map((key) => ({...nextProps.store.tree.data[key], key}))
+    this.setState({allTree: tree})
   }
 
   toggleDialog ({type, key}) {
     if (type === 'CREATE') {
       this.setState({createTreeDialog: !this.state.createTreeDialog})
     } else if (type === 'EDIT') {
-      if (this.state.isAdmin) {
+      if (this.props.store.user.data.isAdmin) {
         this.setState({editTreeDialog: !this.state.editTreeDialog, selectedKey: key})
       }
     }
@@ -105,7 +89,7 @@ export default class Tree extends React.Component {
       },
       {
         title: 'แก้ไข',
-        render: (text, record) => <Button disabled={!this.state.isAdmin} onClick={() => this.toggleDialog({type: 'EDIT', key: record.key})} >แก้ไข</Button>
+        render: (text, record) => <Button disabled={!this.props.store.user.data.isAdmin} onClick={() => this.toggleDialog({type: 'EDIT', key: record.key})} >แก้ไข</Button>
       }
     ]
 
@@ -119,11 +103,12 @@ export default class Tree extends React.Component {
         <div style={{display: 'flex', flexDirection: 'row', margin: 15}} >
           <span style={{fontSize: '1.75em'}} >ต้นไม้</span>
           <span style={{flex: 'auto'}} />
-          { this.state.isAdmin
-            ? <span>
-              <Button style={{margin: 3}} type='primary' onClick={() => this.toggleDialog({type: 'CREATE'})} >สร้างต้นไม้</Button>
-              <Button style={{margin: 3}} type='danger' onClick={this.deleteTree} >ลบ</Button>
-            </span> : null }
+          { this.props.store.user.data.isAdmin &&
+          <span>
+            <Button style={{margin: 3}} type='primary' onClick={() => this.toggleDialog({type: 'CREATE'})} >สร้างต้นไม้</Button>
+            <Button style={{margin: 3}} type='danger' onClick={this.deleteTree} >ลบ</Button>
+          </span>
+          }
         </div>
         <Table pagination={false} rowSelection={rowSelection} dataSource={this.state.allTree} columns={TableColumn} />
         <CreateTreeDialog visible={this.state.createTreeDialog} closeDialog={this.closeDialog} />
@@ -132,3 +117,10 @@ export default class Tree extends React.Component {
     )
   }
 }
+
+Tree.propTypes = {
+  loadTree: PropTypes.func.isRequired,
+  store: PropTypes.object.isRequired
+}
+
+export default connect(Tree)

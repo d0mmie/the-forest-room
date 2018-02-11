@@ -5,21 +5,19 @@ import PropTypes from 'prop-types'
 import qr from 'qrcode'
 import React, { Component } from 'react'
 
+import connect from '../../store/action'
 import PlotTreeDialog from '../../components/plotTreeDialog'
 import TreeModel from '../../components/treeModel'
 
-export default class SecondaryMap extends Component {
+class SecondaryMap extends Component {
   constructor (props) {
     super(props)
     this.state = {
       trees: [],
-      loading: true,
       url: '',
       posX: '',
       posY: '',
       dialogOpen: false,
-      imgX: 0,
-      imgY: 0,
       qrcode: '',
       isAdmin: false,
       imgPosX: 0,
@@ -28,48 +26,43 @@ export default class SecondaryMap extends Component {
     this.plotting = this.plotting.bind(this)
   }
 
-  componentDidMount () {
+  componentWillMount () {
     const { primary, secondary } = this.props.match.params
-    firebase.database().ref(`/map/${primary}/${secondary}`).on('value', async (snap) => {
-      if (snap.val()) {
-        const url = await firebase.storage().ref(snap.val().imgPath).getDownloadURL()
-        this.setState({url, loading: false})
-      }
-    })
-    firebase.database().ref('/tree/location').on('value', (snap) => {
-      if (snap.val()) {
-        const _allTree = Object.keys(snap.val()).map((key) => ({ ...snap.val()[key], id: key }))
-        const allTree = _.filter(_allTree, { primary, secondary })
-        this.setState({trees: allTree})
-      }
-    })
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        firebase.database().ref(`/users/${user.uid}`).on('value', (snap) => {
-          if (snap.val()) {
-            this.setState({isAdmin: snap.val().isAdmin})
-          }
-        })
-      } else {
-        this.setState({isAdmin: false})
-      }
+    this.props.loadMap()
+    this.props.loadTree()
+    this.props.setCurrentRoute({
+      primary,
+      secondary
     })
     qr.toDataURL(`https://theforestroom.xyz${this.props.match.url}`).then((url) => {
       this.setState({qrcode: url})
     })
-    this.state.mapImg && this.setState({mapImg: this.refs.map})
+  }
+
+  async componentWillReceiveProps (nextProps) {
+    if (nextProps.store.maps.loading === false && nextProps.store.tree.loading === false) {
+      const { primary, secondary } = nextProps.match.params
+      const _allTree = Object.keys(nextProps.store.tree.location).map((key) => ({ ...nextProps.store.tree.location[key], id: key }))
+      const allTree = _.filter(_allTree, { primary, secondary })
+      const url = await firebase.storage().ref(nextProps.store.maps.data[nextProps.match.params.primary][nextProps.match.params.secondary].imgPath).getDownloadURL()
+      this.setState({url, trees: allTree})
+    }
   }
 
   plotting (e) {
-    if (this.state.isAdmin) {
-      this.setState({posX: e.pageX - e.currentTarget.x, posY: e.pageY - e.currentTarget.y, dialogOpen: true})
+    if (this.props.store.user.data.isAdmin) {
+      this.props.openPlotDialog({
+        x: e.pageX - e.currentTarget.x,
+        y: e.pageY - e.currentTarget.y
+      })
     }
   }
 
   render () {
-    const { loading, url, dialogOpen, posX, posY, trees, imgX, imgY } = this.state
+    const { store } = this.props
+    const { url, trees } = this.state
     const { primary, secondary } = this.props.match.params
-    if (loading) {
+    if (store.maps.loading || store.tree.loading) {
       return <div><Icon type='loading' /> กำลังโหลด...</div>
     }
     return (
@@ -90,15 +83,9 @@ export default class SecondaryMap extends Component {
           </div>
         </div>
         {
-          trees.map((data) => <TreeModel history={this.props.history} x={imgX} y={imgY} {...data} key={data.id} />)
+          trees.map((data) => <TreeModel push={this.props.history.push} tree={data.tree} id={data.id} key={data.id} />)
         }
-        <PlotTreeDialog
-          primary={primary}
-          posX={posX} posY={posY}
-          secondary={secondary}
-          visible={dialogOpen}
-          closeDialog={() => this.setState({ dialogOpen: false })}
-        />
+        <PlotTreeDialog />
       </div>
     )
   }
@@ -106,5 +93,12 @@ export default class SecondaryMap extends Component {
 
 SecondaryMap.propTypes = {
   match: PropTypes.object.isRequired,
-  history: PropTypes.object
+  history: PropTypes.object,
+  store: PropTypes.object.isRequired,
+  loadTree: PropTypes.func.isRequired,
+  loadMap: PropTypes.func.isRequired,
+  openPlotDialog: PropTypes.func.isRequired,
+  setCurrentRoute: PropTypes.func.isRequired
 }
+
+export default connect(SecondaryMap)

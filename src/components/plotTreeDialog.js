@@ -2,28 +2,18 @@ import { Modal, Select, message } from 'antd'
 import firebase from 'firebase'
 import React from 'react'
 import PropTypes from 'prop-types'
+import connect from '../store/action'
 
 const { Option } = Select
 
-export default class PlotTreeDialog extends React.Component {
+class PlotTreeDialog extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      tree: [],
       selectedKey: '',
-      seleted: false
+      selected: false
     }
     this.plot = this.plot.bind(this)
-  }
-
-  componentWillMount () {
-    firebase.database().ref('/tree/data').on('value', (snap) => {
-      if (snap.val()) {
-        this.setState({tree: snap.val()})
-      } else {
-        this.setState({tree: []})
-      }
-    })
   }
 
   componentWillReceiveProps (nextProps) {
@@ -31,15 +21,15 @@ export default class PlotTreeDialog extends React.Component {
   }
 
   plot () {
-    if (this.state.seleted) {
+    if (this.state.selected) {
       firebase.database().ref('/tree/location').push({
         tree: this.state.selectedKey,
-        primary: this.props.primary,
-        secondary: this.props.secondary,
-        posX: this.props.posX,
-        posY: this.props.posY
+        primary: this.props.store.maps.current.primary,
+        secondary: this.props.store.maps.current.secondary,
+        posX: this.props.store.maps.dialog.posX,
+        posY: this.props.store.maps.dialog.posY
       }).then(() => {
-        this.props.closeDialog()
+        this.props.closePlotDialog()
       })
     } else {
       message.error('กรุณาเลือกต้นไม้')
@@ -47,21 +37,21 @@ export default class PlotTreeDialog extends React.Component {
   }
 
   render () {
-    const { posX, posY, visible, closeDialog } = this.props
+    const { store } = this.props
     return (
       <Modal
-        onCancel={closeDialog}
+        onCancel={this.props.closePlotDialog}
         onOk={this.plot}
-        visible={visible}
+        visible={store.maps.dialog.plot}
       >
-        <p>ตำแหน่งแกน X : {posX}</p>
-        <p>ตำแหน่งแกน Y : {posY}</p>
+        <p>ตำแหน่งแกน X : {store.maps.dialog.posX}</p>
+        <p>ตำแหน่งแกน Y : {store.maps.dialog.posY}</p>
         <div>ต้นไม้ &nbsp;
           <Select
-            onSelect={(e) => this.setState({ selectedKey: e, seleted: true })}
+            onSelect={(e) => this.setState({ selectedKey: e, selected: true })}
             defaultValue='เลือก...'
           >
-            { Object.keys(this.state.tree).map((key) => <Option key={key} value={key}>{this.state.tree[key].name}</Option>) }
+            { Object.keys(store.tree.data).map((key) => <Option key={key} value={key}>{store.tree.data[key].name}</Option>) }
           </Select>
         </div>
       </Modal>
@@ -70,10 +60,8 @@ export default class PlotTreeDialog extends React.Component {
 }
 
 PlotTreeDialog.propTypes = {
-  primary: PropTypes.string.isRequired,
-  secondary: PropTypes.string.isRequired,
-  posX: PropTypes.any,
-  posY: PropTypes.any,
-  closeDialog: PropTypes.func.isRequired,
-  visible: PropTypes.bool.isRequired
+  closePlotDialog: PropTypes.func.isRequired,
+  store: PropTypes.object.isRequired
 }
+
+export default connect(PlotTreeDialog)

@@ -3,16 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@firebase/app-types": "^0.1.1",
     "antd": "^3.1.0",
     "firebase": "^4.8.1",
+    "immutable": "^3.8.2",
+    "jquery": "^3.3.1",
     "lodash": "^4.17.4",
     "qrcode": "^1.2.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-image-mapper": "^0.0.4",
     "react-loadable": "^5.3.1",
+    "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
+    "react-router-redux": "^4.0.8",
     "react-scripts": "1.0.17",
+    "redux": "^3.7.2",
+    "redux-devtools-extension": "^2.13.2",
     "styled-components": "^2.4.0"
   },
   "scripts": {
