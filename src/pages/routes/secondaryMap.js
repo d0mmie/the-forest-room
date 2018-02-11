@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { Card } from 'antd'
+import { Card, Switch } from 'antd'
 import firebase from 'firebase'
 import PropTypes from 'prop-types'
 import qr from 'qrcode'
@@ -38,7 +38,7 @@ class SecondaryMap extends Component {
       const { primary, secondary } = nextProps.match.params
       const _allTree = Object.keys(nextProps.store.tree.location).map((key) => ({ ...nextProps.store.tree.location[key], id: key }))
       const allTree = _.filter(_allTree, { primary, secondary })
-      const url = await firebase.storage().ref(nextProps.store.maps.data[nextProps.match.params.primary][nextProps.match.params.secondary].imgPath).getDownloadURL()
+      const url = await firebase.storage().ref(nextProps.store.maps.data[nextProps.match.params.primary][nextProps.match.params.secondary][nextProps.store.maps.mock ? 'imgPathMock' : 'imgPath']).getDownloadURL()
       this.setState({url, trees: allTree})
     }
   }
@@ -73,6 +73,9 @@ class SecondaryMap extends Component {
           <Card title='รายละเอียด' style={{width: '30%', margin: '10px 3% 0 0'}} >
             <p>แผนที่ระดับกลางที่ : {store.maps.current.primary}</p>
             <p>แผนที่เล็กที่ : {store.maps.current.secondary}</p>
+            <p>Mock&nbsp;
+              <Switch defaultChecked={store.maps.mock} onChange={this.props.setMock} />
+            </p>
             <p><b>QRCODE</b>(เพื่อเข้าสู่หน้านี้)</p>
             <p><img src={this.state.qrcode} alt='' /></p>
           </Card>
@@ -93,7 +96,8 @@ SecondaryMap.propTypes = {
   loadTree: PropTypes.func.isRequired,
   loadMap: PropTypes.func.isRequired,
   openPlotDialog: PropTypes.func.isRequired,
-  setCurrentRoute: PropTypes.func.isRequired
+  setCurrentRoute: PropTypes.func.isRequired,
+  setMock: PropTypes.func.isRequired
 }
 
 export default connect(SecondaryMap)

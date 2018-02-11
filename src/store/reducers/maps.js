@@ -9,7 +9,8 @@ const initialState = {
   current: {
     primary: '',
     secondary: ''
-  }
+  },
+  mock: false
 }
 
 export default (state = initialState, action) => {
@@ -48,6 +49,12 @@ export default (state = initialState, action) => {
           primary: action.primary,
           secondary: action.secondary
         }}
+    }
+    case '@@SET_MOCK': {
+      return {
+        ...state,
+        mock: action.payload
+      }
     }
     default: {
       return state

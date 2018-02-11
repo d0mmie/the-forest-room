@@ -67,6 +67,12 @@ export default (dispatch) => {
         primary,
         secondary
       })
+    },
+    setMock: (status) => {
+      dispatch({
+        type: '@@SET_MOCK',
+        payload: status
+      })
     }
   }
 }

@@ -10,30 +10,25 @@ class PlotTreeDialog extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      selectedKey: '',
-      selected: false
+      selectedKey: ''
     }
     this.plot = this.plot.bind(this)
   }
 
   componentWillReceiveProps (nextProps) {
-    this.setState({selectedKey: ''})
+    this.setState({selectedKey: Object.keys(this.props.store.tree.data)[0]})
   }
 
   plot () {
-    if (this.state.selected) {
-      firebase.database().ref('/tree/location').push({
-        tree: this.state.selectedKey,
-        primary: this.props.store.maps.current.primary,
-        secondary: this.props.store.maps.current.secondary,
-        posX: this.props.store.maps.dialog.posX,
-        posY: this.props.store.maps.dialog.posY
-      }).then(() => {
-        this.props.closePlotDialog()
-      })
-    } else {
-      message.error('กรุณาเลือกต้นไม้')
-    }
+    firebase.database().ref('/tree/location').push({
+      tree: this.state.selectedKey,
+      primary: this.props.store.maps.current.primary,
+      secondary: this.props.store.maps.current.secondary,
+      posX: this.props.store.maps.dialog.posX,
+      posY: this.props.store.maps.dialog.posY
+    }).then(() => {
+      this.props.closePlotDialog()
+    })
   }
 
   render () {
@@ -49,7 +44,7 @@ class PlotTreeDialog extends React.Component {
         <div>ต้นไม้ &nbsp;
           <Select
             onSelect={(e) => this.setState({ selectedKey: e, selected: true })}
-            defaultValue='เลือก...'
+            value={this.state.selectedKey}
           >
             { Object.keys(store.tree.data).map((key) => <Option key={key} value={key}>{store.tree.data[key].name}</Option>) }
           </Select>
