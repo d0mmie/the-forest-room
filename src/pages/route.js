@@ -3,7 +3,7 @@ import L from 'react-loadable'
 import React from 'react'
 
 const Loading = () => (
-  <div><Icon type='loading' /> Loading...</div>
+  <div><Icon type='loading' /> กำลังโหลด...</div>
 )
 
 const Loadable = opts => L({

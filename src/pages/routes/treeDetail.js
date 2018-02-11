@@ -3,6 +3,7 @@ import qr from 'qrcode'
 import React from 'react'
 import styles from 'styled-components'
 import connect from '../../store/action'
+import { Card } from 'antd'
 
 const TreeImg = styles.img`
   height: 400px;
@@ -30,12 +31,10 @@ class TreeDetail extends React.Component {
   render () {
     const { store, match } = this.props
     if (this.props.store.tree.loading) {
-      return <div>Loading...</div>
+      return <Card title='กำลังโหลด...' style={{margin: 10}} loading>...</Card>
     }
     return (
-      <div style={{margin: 20}} >
-        <h1>{store.tree.data[match.params.treeId].name}</h1>
-        <p>&nbsp;</p>
+      <Card style={{margin: 10}} title={store.tree.data[match.params.treeId].name} >
         <div style={{display: 'flex', justifyContent: 'center'}} ><TreeImg src={store.tree.data[match.params.treeId].image} alt={store.tree.data[match.params.treeId].name} /></div>
         <p>&nbsp;</p>
         <p><b>{'ชื่อวิทยาศาสตร์:'}</b> <i>{store.tree.data[match.params.treeId].scienceName}</i></p>
@@ -46,7 +45,7 @@ class TreeDetail extends React.Component {
         <div>
           <img src={this.state.qrcode} alt='QRCODE' />
         </div>
-      </div>
+      </Card>
     )
   }
 }

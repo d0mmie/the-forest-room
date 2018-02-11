@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { Icon } from 'antd'
+import { Card } from 'antd'
 import firebase from 'firebase'
 import PropTypes from 'prop-types'
 import qr from 'qrcode'
@@ -15,13 +15,7 @@ class SecondaryMap extends Component {
     this.state = {
       trees: [],
       url: '',
-      posX: '',
-      posY: '',
-      dialogOpen: false,
-      qrcode: '',
-      isAdmin: false,
-      imgPosX: 0,
-      imgPosY: 0
+      qrcode: ''
     }
     this.plotting = this.plotting.bind(this)
   }
@@ -61,9 +55,8 @@ class SecondaryMap extends Component {
   render () {
     const { store } = this.props
     const { url, trees } = this.state
-    const { primary, secondary } = this.props.match.params
     if (store.maps.loading || store.tree.loading) {
-      return <div><Icon type='loading' /> กำลังโหลด...</div>
+      return <Card style={{margin: 10}} title='กำลังโหลด...' loading>...</Card>
     }
     return (
       <div >
@@ -76,11 +69,13 @@ class SecondaryMap extends Component {
               onClick={this.plotting}
             />
           </div>
-          <div style={{ paddingLeft: 10, paddingRight: 10 }} >
-            <p>แผนที่ระดับกลางที่ : {primary}</p>
-            <p>แผนที่เล็กที่ : {secondary}</p>
+          <div style={{flex: 'auto'}} />
+          <Card title='รายละเอียด' style={{width: '30%', margin: '10px 3% 0 0'}} >
+            <p>แผนที่ระดับกลางที่ : {store.maps.current.primary}</p>
+            <p>แผนที่เล็กที่ : {store.maps.current.secondary}</p>
+            <p><b>QRCODE</b>(เพื่อเข้าสู่หน้านี้)</p>
             <p><img src={this.state.qrcode} alt='' /></p>
-          </div>
+          </Card>
         </div>
         {
           trees.map((data) => <TreeModel push={this.props.history.push} tree={data.tree} id={data.id} key={data.id} />)

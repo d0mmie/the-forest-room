@@ -2,6 +2,7 @@ import { Button } from 'antd'
 import PropTypes from 'prop-types'
 import React from 'react'
 import styles from 'styled-components'
+import connect from '../store/action'
 
 const UserPanel = styles.div`
   display: flex;
@@ -22,24 +23,23 @@ const UserImgBox = styles.div`
   }
 `
 
-export default class ProfilePanel extends React.Component {
+class ProfilePanel extends React.Component {
   render () {
-    const { user, admin } = this.props
+    const { store } = this.props
     return (
       <div style={{flex: 1, display: 'flex', justifyContent: 'center', flexDirection: 'column', margin: 25}} >
         <UserPanel>
           <div style={{flex: 1}} >
-            <h2>โปรไฟล์</h2>
-            <p><b>รหัสผู้ใช้งาน:</b> {user.uid}</p>
-            <p><b>ชื่อ:</b> {user.displayName} </p>
-            <p><b>อีเมล:</b> {user.email}</p>
-            <p><b>ระดับ:</b> {admin ? 'ผู้ดูแล' : 'ผู้ใช้'}</p>
+            <p><b>รหัสผู้ใช้งาน:</b> {store.user.data.uid}</p>
+            <p><b>ชื่อ:</b> {store.user.data.displayName} </p>
+            <p><b>อีเมล:</b> {store.user.data.email}</p>
+            <p><b>ระดับ:</b> {store.user.data.isAdmin ? 'ผู้ดูแล' : 'ผู้ใช้'}</p>
             <p>
-              <Button size='small' type='danger' onClick={this.props.signout} >ออกจากระบบ</Button>
+              <Button size='small' type='danger' onClick={this.props.logout} >ออกจากระบบ</Button>
             </p>
           </div>
           <UserImgBox>
-            <img style={{width: 200, height: 200, borderRadius: 100}} src={user.photoURL} alt={user.displayName} />
+            <img style={{width: 200, height: 200, borderRadius: 100}} src={store.user.data.photoURL} alt={store.user.data.displayName} />
           </UserImgBox>
         </UserPanel>
       </div>
@@ -48,7 +48,8 @@ export default class ProfilePanel extends React.Component {
 }
 
 ProfilePanel.propTypes = {
-  signout: PropTypes.func.isRequired,
-  user: PropTypes.object,
-  admin: PropTypes.bool
+  logout: PropTypes.func.isRequired,
+  store: PropTypes.object.isRequired
 }
+
+export default connect(ProfilePanel)

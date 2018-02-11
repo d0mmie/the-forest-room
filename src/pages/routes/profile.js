@@ -1,4 +1,4 @@
-import { Button } from 'antd'
+import { Button, Card } from 'antd'
 import firebase from 'firebase'
 import React from 'react'
 
@@ -12,16 +12,18 @@ class Profile extends React.Component {
   }
 
   render () {
+    if (this.props.store.user.loading) {
+      return <Card style={{margin: 10}} loading title='กำลังโหลด...' >...</Card>
+    }
     return (
-      <div style={{ display: 'flex', justifyContent: 'center' }} >
-        {
-          this.props.store.user.isLogin
-            ? <ProfilePanel user={this.props.store.user.data} admin={this.props.store.user.data.isAdmin} signout={this.props.logout} />
-            : <div>
-              <Button style={{margin: 4}} icon='google' size='large' onClick={this.loginWithGmail} >เข้าสู่ระบบด้วย Gmail</Button>
-            </div>
+      <Card title='โปรไฟล์' style={{margin: 10}} >
+        {this.props.store.user.isLogin
+          ? <ProfilePanel user={this.props.store.user.data} admin={this.props.store.user.data.isAdmin} signout={this.props.logout} />
+          : <div>
+            <Button style={{margin: 4}} icon='google' size='large' onClick={this.loginWithGmail} >เข้าสู่ระบบด้วย Gmail</Button>
+          </div>
         }
-      </div>
+      </Card>
     )
   }
 }
