@@ -48,6 +48,7 @@ class PrimaryMap extends React.Component {
     return (
       <div style={{display: 'flex', justifyContent: 'center'}} >
         <ImageMapper
+          fillColor='rgba(68, 245, 188, 0.3)'
           onImageClick={this.getPosition}
           onClick={this.MapNivigate}
           src={this.state.mapUrl}

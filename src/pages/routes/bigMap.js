@@ -48,6 +48,7 @@ class BigMap extends React.Component {
         {
           store.maps.loading === false &&
           <ImageMapper
+            fillColor='rgba(68, 245, 188, 0.3)'
             onImageClick={this.getPosition}
             onClick={this.MapNivigate}
             src={this.state.mapUrl}

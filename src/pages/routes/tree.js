@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Table, Button } from 'antd'
+import { Card, Button, List } from 'antd'
 import firebase from 'firebase'
 import React from 'react'
 import PropTypes from 'prop-types'
@@ -52,68 +52,40 @@ class Tree extends React.Component {
   }
 
   render () {
-    const TableColumn = [
-      {
-        title: 'รูป',
-        dataIndex: 'image',
-        render: (text, record) => <img src={text} alt={record.name} height={100} />
-      },
-      {
-        title: 'ชื่อ',
-        dataIndex: 'name',
-        render: (text, record) => <Link to={`/tree/${record.key}`} >{text}</Link>
-      },
-      {
-        title: 'ชื่อวิทยาศาสตร์',
-        dataIndex: 'scienceName',
-        render: (text) => <i>{text}</i>
-      },
-      {
-        title: 'ลักษณะ',
-        dataIndex: 'detail',
-        render: (text) => text.substr(0, 30) + '..'
-      },
-      {
-        title: 'ประวัติ',
-        dataIndex: 'history',
-        render: (text) => text.substr(0, 30) + '..'
-      },
-      {
-        title: 'สรรพคุณ',
-        dataIndex: 'property',
-        render: (text) => text.substr(0, 30) + '..'
-      },
-      {
-        title: 'รหัสสี',
-        dataIndex: 'legendColor'
-      },
-      {
-        title: 'แก้ไข',
-        render: (text, record) => <Button disabled={!this.props.store.user.data.isAdmin} onClick={() => this.toggleDialog({type: 'EDIT', key: record.key})} >แก้ไข</Button>
-      }
-    ]
-
-    const rowSelection = {
-      onChange: (selectedRowKeys, selectedRow) => {
-        this.setState({ selectedRowKeys })
-      }
-    }
     return (
-      <div>
-        <div style={{display: 'flex', flexDirection: 'row', margin: 15}} >
-          <span style={{fontSize: '1.75em'}} >ต้นไม้</span>
-          <span style={{flex: 'auto'}} />
-          { this.props.store.user.data.isAdmin &&
+      <Card
+        title={<h3 style={{marginBottom: 0}} >ต้นไม้</h3>}
+        style={{margin: 10}}
+        extra={this.props.store.user.data.isAdmin &&
           <span>
-            <Button style={{margin: 3}} type='primary' onClick={() => this.toggleDialog({type: 'CREATE'})} >สร้างต้นไม้</Button>
-            <Button style={{margin: 3}} type='danger' onClick={this.deleteTree} >ลบ</Button>
+            <Button size='small' style={{margin: 3}} type='primary' onClick={() => this.toggleDialog({type: 'CREATE'})} >สร้างต้นไม้</Button>
+            <Button size='small' style={{margin: 3}} type='danger' onClick={this.deleteTree} >ลบ</Button>
           </span>
-          }
+        }
+      >
+        <div style={{display: 'flex', flexDirection: 'row', margin: 15}} >
+          <span style={{flex: 'auto'}} />
         </div>
-        <Table pagination={false} rowSelection={rowSelection} dataSource={this.state.allTree} columns={TableColumn} />
+        <List
+          itemLayout='vertical'
+          size='large'
+          dataSource={this.state.allTree}
+          renderItem={item => (
+            <List.Item
+              key={item.key}
+              extra={<img src={item.image} alt={item.name} width={272} />}
+            >
+              <List.Item.Meta
+                title={<Link to={`/tree/${item.key}`}>{item.name}</Link>}
+                description={item.scienceName}
+              />
+              {item.detail}
+            </List.Item>
+          )}
+        />
         <CreateTreeDialog visible={this.state.createTreeDialog} closeDialog={this.closeDialog} />
         <UpdateTreeDialog visible={this.state.editTreeDialog} id={this.state.selectedKey} closeDialog={this.closeDialog} />
-      </div>
+      </Card>
     )
   }
 }

@@ -1,4 +1,4 @@
-import { Button } from 'antd'
+import { Button, Tag } from 'antd'
 import PropTypes from 'prop-types'
 import React from 'react'
 import styles from 'styled-components'
@@ -33,7 +33,7 @@ class ProfilePanel extends React.Component {
             <p><b>รหัสผู้ใช้งาน:</b> {store.user.data.uid}</p>
             <p><b>ชื่อ:</b> {store.user.data.displayName} </p>
             <p><b>อีเมล:</b> {store.user.data.email}</p>
-            <p><b>ระดับ:</b> {store.user.data.isAdmin ? 'ผู้ดูแล' : 'ผู้ใช้'}</p>
+            <p><b>ระดับ:</b> {store.user.data.isAdmin ? <Tag color='orange'>{'ผู้ดูแล'}</Tag> : <Tag color='green'>{'ผู้ใช้'}</Tag>}</p>
             <p>
               <Button size='small' type='danger' onClick={this.props.logout} >ออกจากระบบ</Button>
             </p>

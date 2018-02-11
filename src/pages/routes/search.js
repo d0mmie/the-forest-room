@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Table } from 'antd'
+import { Input, List, Card } from 'antd'
 import _ from 'lodash'
 import { Link } from 'react-router-dom'
 import connect from '../../store/action'
@@ -12,7 +12,8 @@ class SearchBox extends React.Component {
     super(props)
     this.state = {
       allTree: [],
-      searched: []
+      searched: [],
+      currentPage: 1
     }
     this.search = this.search.bind(this)
   }
@@ -29,50 +30,44 @@ class SearchBox extends React.Component {
   }
 
   search (keyword) {
-    const searched = _.filter(this.state.allTree, (o) => { return _.startsWith(this.props.store.tree.data[o.tree].name, keyword) })
-    this.setState({searched})
+    if (keyword !== '') {
+      const searched = _.filter(this.state.allTree, (o) => { return this.props.store.tree.data[o.tree].name.toUpperCase().indexOf(keyword.toUpperCase()) !== -1 || this.props.store.tree.data[o.tree].scienceName.toUpperCase().indexOf(keyword.toUpperCase()) !== -1 })
+      this.setState({searched})
+    }
   }
   render () {
     const { store } = this.props
-    const TableColumn = [
-      {
-        title: 'รูป',
-        key: 'img',
-        render: (text, record) => <img src={store.tree.data[record.tree].image} alt='' height={100} />
-      },
-      {
-        title: 'ชื่อ',
-        key: 'name',
-        render: (text, record) => <span>{store.tree.data[record.tree].name}</span>
-      },
-      {
-        title: 'แผนที่ระดับกลาง',
-        key: 'primary',
-        dataIndex: 'primary'
-      },
-      {
-        title: 'แผนที่ระดับเล็ก',
-        key: 'secondary',
-        dataIndex: 'secondary'
-      },
-      {
-        title: 'ไป',
-        key: 'go',
-        render: (text, record) => <Link to={`/map/${record.primary}/${record.secondary}`} >ไป</Link>
-      }
-    ]
-
     return (
-      <div style={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}} >
-        <div style={{display: 'flex', justifyContent: 'center'}} >
+      <Card
+        style={{margin: 10}}
+        title={<h3 style={{marginBottom: 0}} >ค้นหา</h3>}
+        extra={
           <Search
             placeholder='ค้นหาต้นไม้'
             onSearch={this.search}
             style={{ width: 500 }}
           />
-        </div>
-        <Table pagination={false} columns={TableColumn} dataSource={this.state.searched} />
-      </div>
+        }>
+        <List
+          itemLayout='vertical'
+          size='large'
+          dataSource={this.state.searched}
+          renderItem={item => (
+            <List.Item
+              key={item.id}
+              extra={<img src={store.tree.data[item.tree].image} alt={item.name} width={272} />}
+            >
+              <List.Item.Meta
+                title={<Link to={`/map/${item.primary}/${item.secondary}`}>{store.tree.data[item.tree].name}</Link>}
+                description={store.tree.data[item.tree].scienceName}
+              />
+              <p>แผนที่ระดับกลางที่ {item.primary}</p>
+              <p>แผนที่ระดับเล็กที่ {item.secondary}</p>
+            </List.Item>
+          )}
+        />
+        {/* <Table pagination={false} columns={TableColumn} dataSource={this.state.searched} /> */}
+      </Card>
     )
   }
 }
