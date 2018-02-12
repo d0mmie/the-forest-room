@@ -77,9 +77,12 @@ class SecondaryMap extends Component {
           <Card title='รายละเอียด' style={{width: '30%', margin: '10px 3% 0 0'}} >
             <p>แผนที่ระดับกลางที่ : {store.maps.current.primary}</p>
             <p>แผนที่เล็กที่ : {store.maps.current.secondary}</p>
-            <p>Mock&nbsp;
-              <Switch defaultChecked={store.maps.mock} onChange={this.props.setMock} />
-            </p>
+            {
+              store.user.data.isAdmin &&
+              <p>Mock&nbsp;
+                <Switch defaultChecked={store.maps.mock} onChange={this.props.setMock} />
+              </p>
+            }      
             <p><b>QRCODE</b>(เพื่อเข้าสู่หน้านี้)</p>
             <p><img src={this.state.qrcode} alt='' /></p>
             <p>ชนิดของต้นไม้ในพิ้นที่</p>

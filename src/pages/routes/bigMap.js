@@ -1,6 +1,7 @@
 import firebase from 'firebase'
 import PropTypes from 'prop-types'
 import React from 'react'
+import { Card } from 'antd'
 
 import connect from '../../store/action'
 import ImageMapper from 'react-image-mapper'
@@ -44,7 +45,7 @@ class BigMap extends React.Component {
   render () {
     const { store } = this.props
     return (
-      <div style={{display: 'flex', justifyContent: 'center'}} >
+      <Card style={{margin: 10}} title='แผนผังบริเวณโรงเรียนกำแพงเพชรพิทยาคม' bodyStyle={{display: 'flex', justifyContent: 'center'}} >
         {
           store.maps.loading === false &&
           <ImageMapper
@@ -56,7 +57,7 @@ class BigMap extends React.Component {
             width={704}
           />
         }
-      </div>
+      </Card>
     )
   }
 }

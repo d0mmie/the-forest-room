@@ -1,4 +1,4 @@
-import { Icon } from 'antd'
+import { Icon, Card } from 'antd'
 import firebase from 'firebase'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -46,7 +46,7 @@ class PrimaryMap extends React.Component {
       return <div><Icon type='loading' /> กำลังโหลด...</div>
     }
     return (
-      <div style={{display: 'flex', justifyContent: 'center'}} >
+      <Card title={`แผนที่บริเวณที่ ${store.maps.current.primary}`} style={{margin: 10}} bodyStyle={{display: 'flex', justifyContent: 'center'}} >
         <ImageMapper
           fillColor='rgba(68, 245, 188, 0.3)'
           onImageClick={this.getPosition}
@@ -55,7 +55,7 @@ class PrimaryMap extends React.Component {
           map={store.maps.data[match.params.mapId]['map']}
           width={704}
         />
-      </div>
+      </Card>
     )
   }
 }
