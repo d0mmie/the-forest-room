@@ -1,12 +1,25 @@
 import { Link } from 'react-router-dom'
-import { Card, Button, List } from 'antd'
-import firebase from 'firebase'
+import { Card, Button, List, Icon } from 'antd'
 import React from 'react'
 import PropTypes from 'prop-types'
 
 import connect from '../../store/action'
 import CreateTreeDialog from '../../components/createTreeDialog'
 import UpdateTreeDialog from '../../components/editTreeDialog'
+import DeleteTreeDialog from '../../components/deleteTreeDialog'
+
+const IconText = ({ type, text, action }) => ( // สร้าง component ชื่อ IconText
+  <span onClick={action}>
+    <Icon type={type} style={{ marginRight: 8 }} />
+    {text}
+  </span>
+)
+
+IconText.propTypes = {
+  text: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  action: PropTypes.func.isRequired
+}
 
 class Tree extends React.Component {
   constructor (props) {
@@ -18,37 +31,14 @@ class Tree extends React.Component {
       editTreeDialog: false,
       selectedKey: ''
     }
-    this.deleteTree = this.deleteTree.bind(this)
-    this.toggleDialog = this.toggleDialog.bind(this)
-    this.closeDialog = this.closeDialog.bind(this)
   }
 
   componentWillMount () {
-    this.props.loadTree()
+    this.props.loadTree() // โหลดต้นไม้
   }
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps (nextProps) { // เซ็ทค่าต้นไม้
     const tree = Object.keys(nextProps.store.tree.data).map((key) => ({...nextProps.store.tree.data[key], key}))
     this.setState({allTree: tree})
-  }
-
-  toggleDialog ({type, key}) {
-    if (type === 'CREATE') {
-      this.setState({createTreeDialog: !this.state.createTreeDialog})
-    } else if (type === 'EDIT') {
-      if (this.props.store.user.data.isAdmin) {
-        this.setState({editTreeDialog: !this.state.editTreeDialog, selectedKey: key})
-      }
-    }
-  }
-
-  closeDialog () {
-    this.setState({createTreeDialog: false, editTreeDialog: false})
-  }
-
-  deleteTree () {
-    this.state.selectedRowKeys.map((val) => {
-      return firebase.database().ref(`/tree/data/${val}`).remove()
-    })
   }
 
   render () {
@@ -58,8 +48,7 @@ class Tree extends React.Component {
         style={{margin: 10}}
         extra={this.props.store.user.data.isAdmin &&
           <span>
-            <Button size='small' style={{margin: 3}} type='primary' onClick={() => this.toggleDialog({type: 'CREATE'})} >สร้างต้นไม้</Button>
-            <Button size='small' style={{margin: 3}} type='danger' onClick={this.deleteTree} >ลบ</Button>
+            <Button size='small' style={{margin: 3}} type='primary' onClick={this.props.openCreateTreeDialog} >สร้างต้นไม้</Button>
           </span>
         }
       >
@@ -74,6 +63,10 @@ class Tree extends React.Component {
             <List.Item
               key={item.key}
               extra={<img src={item.image} alt={item.name} width={272} />}
+              actions={[
+                <IconText action={() => this.props.openEditTreeDialog(item.key)} type='edit' text='แก้ไข' />,
+                <IconText action={() => this.props.openDeleteTreeDialog(item.key)} type='delete' text='ลบ' />
+              ]}
             >
               <List.Item.Meta
                 title={<Link to={`/tree/${item.key}`}>{item.name}</Link>}
@@ -83,8 +76,9 @@ class Tree extends React.Component {
             </List.Item>
           )}
         />
-        <CreateTreeDialog visible={this.state.createTreeDialog} closeDialog={this.closeDialog} />
-        <UpdateTreeDialog visible={this.state.editTreeDialog} id={this.state.selectedKey} closeDialog={this.closeDialog} />
+        <CreateTreeDialog />
+        <UpdateTreeDialog />
+        <DeleteTreeDialog />
       </Card>
     )
   }
@@ -92,7 +86,10 @@ class Tree extends React.Component {
 
 Tree.propTypes = {
   loadTree: PropTypes.func.isRequired,
-  store: PropTypes.object.isRequired
+  store: PropTypes.object.isRequired,
+  openCreateTreeDialog: PropTypes.func.isRequired,
+  openDeleteTreeDialog: PropTypes.func.isRequired,
+  openEditTreeDialog: PropTypes.func.isRequired
 }
 
 export default connect(Tree)

@@ -26,13 +26,13 @@ class TreeDetail extends React.Component {
     }
   }
   componentWillMount () {
-    this.props.loadTree()
-    qr.toDataURL(`https://theforestroom.xyz${this.props.match.url}`).then((url) => {
+    this.props.loadTree() // โหลดต้นไม้
+    qr.toDataURL(`https://theforestroom.xyz${this.props.match.url}`).then((url) => { // ทำ QR CODE
       this.setState({qrcode: url})
     })
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps (nextProps) { // กรอง map ที่้ต้นไม้อยู่
     const groupedTree = _.filter(nextProps.store.tree.location, (o) => o.tree === nextProps.match.params.treeId)
     const groupedAppend = groupedTree.map((val) => ({primary: val.primary, secondary: val.secondary}))
     const uniqueAppend = _.uniqBy(groupedAppend, JSON.stringify)
@@ -41,7 +41,7 @@ class TreeDetail extends React.Component {
 
   render () {
     const { store, match } = this.props
-    if (this.props.store.tree.loading) {
+    if (this.props.store.tree.loading) { // เช็คว่า loading
       return <Card title='กำลังโหลด...' style={{margin: 10}} loading>...</Card>
     }
     return (

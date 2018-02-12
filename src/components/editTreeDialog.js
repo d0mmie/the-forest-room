@@ -2,10 +2,11 @@ import { Modal, Input } from 'antd'
 import firebase from 'firebase'
 import PropTypes from 'prop-types'
 import React from 'react'
+import connect from '../store/action'
 
 const { TextArea } = Input
 
-export default class EditTreeDialog extends React.Component {
+class EditTreeDialog extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -21,21 +22,24 @@ export default class EditTreeDialog extends React.Component {
   }
 
   updateTreeModel () {
-    firebase.database().ref(`/tree/data/${this.props.id}`).set(this.state).then(() => {
-      this.props.closeDialog()
+    firebase.database().ref(`/tree/data/${this.props.store.tree.dialog.selected}`).set(this.state).then(() => {
+      this.props.closeTreeDialog()
     })
   }
 
   componentWillReceiveProps (nextProps) {
-    firebase.database().ref(`/tree/data/${nextProps.id}`).once('value').then((snap) => {
-      this.setState(snap.val())
-    })
+    if (nextProps.store.tree.dialog.selected !== '') {
+      firebase.database().ref(`/tree/data/${nextProps.store.tree.dialog.selected}`).once('value').then((snap) => {
+        this.setState(snap.val())
+      })
+    }
   }
 
   render () {
     const { name, scienceName, detail, history, image, property, legendColor } = this.state
+    const { store, closeTreeDialog } = this.props
     return (
-      <Modal title='สร้างต้นไม้' visible={this.props.visible} onCancel={this.props.closeDialog} onOk={this.updateTreeModel} >
+      <Modal title='สร้างต้นไม้' visible={store.tree.dialog.edit} onCancel={closeTreeDialog} onOk={this.updateTreeModel} >
         <p>ชื่อต้นไม้</p>
         <p><Input placeholder='ชื่อ' value={name} onChange={(e) => this.setState({name: e.target.value})} /></p>
         <p>ชื่อวิทยาศาสตร์</p>
@@ -57,7 +61,8 @@ export default class EditTreeDialog extends React.Component {
 }
 
 EditTreeDialog.propTypes = {
-  closeDialog: PropTypes.func.isRequired,
-  id: PropTypes.string.isRequired,
-  visible: PropTypes.bool.isRequired
+  closeTreeDialog: PropTypes.func.isRequired,
+  store: PropTypes.object.isRequired
 }
+
+export default connect(EditTreeDialog)

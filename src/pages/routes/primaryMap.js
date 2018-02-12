@@ -16,11 +16,11 @@ class PrimaryMap extends React.Component {
   }
 
   componentWillMount () {
-    this.props.loadMap()
-    this.props.setCurrentRoute({primary: this.props.match.params.mapId})
+    this.props.loadMap() // โหลดข้อมูลแผนที่
+    this.props.setCurrentRoute({primary: this.props.match.params.mapId}) // เซ็ทค่า พารามิเตอร์ ของ primary
   }
 
-  async componentWillReceiveProps (nextProps) {
+  async componentWillReceiveProps (nextProps) { // รับค่า รูปของแผนที่
     if (nextProps.store.maps.loading === false) {
       const url = await firebase.storage().ref(nextProps.store.maps.data[nextProps.match.params.mapId].imgPath).getDownloadURL()
       this.setState({
@@ -37,12 +37,12 @@ class PrimaryMap extends React.Component {
   }
 
   MapNivigate (event, index) {
-    this.props.history.push(this.props.store.maps.data[this.props.match.params.mapId].link[index].path)
+    this.props.history.push(this.props.store.maps.data[this.props.match.params.mapId].link[index].path) // เปลี่ยนหน้า
   }
 
   render () {
     const { store, match } = this.props
-    if (store.maps.loading) {
+    if (store.maps.loading) { // ถ้าหน้ากำลังโหลด ให้ใช้ component loading
       return <div><Icon type='loading' /> กำลังโหลด...</div>
     }
     return (

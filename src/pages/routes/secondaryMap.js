@@ -35,8 +35,8 @@ class SecondaryMap extends Component {
     })
   }
 
-  async componentWillReceiveProps (nextProps) {
-    if (nextProps.store.maps.loading === false && nextProps.store.tree.loading === false) {
+  async componentWillReceiveProps (nextProps) { 
+    if (nextProps.store.maps.loading === false && nextProps.store.tree.loading === false) { // เช็คว่า loading อยู่หรือเปล่า
       const { primary, secondary } = nextProps.match.params
       const _allTree = Object.keys(nextProps.store.tree.location).map((key) => ({ ...nextProps.store.tree.location[key], id: key }))
       const allTree = _.filter(_allTree, { primary, secondary })
@@ -47,8 +47,8 @@ class SecondaryMap extends Component {
     }
   }
 
-  plotting (e) {
-    if (this.props.store.user.data.isAdmin) {
+  plotting (e) { // พลอทจุด
+    if (this.props.store.user.data.isAdmin) { // เช็คว่าเป็น admin หรือเปล่า
       this.props.openPlotDialog({
         x: e.pageX - e.currentTarget.x,
         y: e.pageY - e.currentTarget.y
@@ -59,7 +59,7 @@ class SecondaryMap extends Component {
   render () {
     const { store } = this.props
     const { url, trees } = this.state
-    if (store.maps.loading || store.tree.loading) {
+    if (store.maps.loading || store.tree.loading) { // เช็คว่า loading หรือเปล่า
       return <Card style={{margin: 10}} title='กำลังโหลด...' loading>...</Card>
     }
     return (
@@ -78,7 +78,7 @@ class SecondaryMap extends Component {
             <p>แผนที่ระดับกลางที่ : {store.maps.current.primary}</p>
             <p>แผนที่เล็กที่ : {store.maps.current.secondary}</p>
             {
-              store.user.data.isAdmin &&
+              store.user.data.isAdmin && // เช็คว่าเป็น admin หรือเปล่า
               <p>Mock&nbsp;
                 <Switch defaultChecked={store.maps.mock} onChange={this.props.setMock} />
               </p>

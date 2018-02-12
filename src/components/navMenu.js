@@ -11,7 +11,7 @@ export default class NavMenu extends React.Component {
     this.changeRoute = this.changeRoute.bind(this)
   }
 
-  changeRoute (e) {
+  changeRoute (e) { // เปลี่ยนหน้า
     this.props.history.push(e.key)
   }
   render () {

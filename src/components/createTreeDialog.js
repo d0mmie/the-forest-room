@@ -2,10 +2,11 @@ import { Modal, Input } from 'antd'
 import firebase from 'firebase'
 import PropTypes from 'prop-types'
 import React from 'react'
+import connect from '../store/action'
 
 const { TextArea } = Input
 
-export default class CreateTreeDialog extends React.Component {
+class CreateTreeDialog extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -22,7 +23,7 @@ export default class CreateTreeDialog extends React.Component {
 
   createTreeModel () {
     firebase.database().ref('/tree/data').push(this.state).then(() => {
-      this.props.closeDialog()
+      this.props.closeTreeDialog()
     })
   }
 
@@ -40,8 +41,9 @@ export default class CreateTreeDialog extends React.Component {
 
   render () {
     const { name, scienceName, detail, history, image, property, legendColor } = this.state
+    const { store } = this.props
     return (
-      <Modal title='สร้างต้นไม้' visible={this.props.visible} onCancel={this.props.closeDialog} onOk={this.createTreeModel} >
+      <Modal title='สร้างต้นไม้' visible={store.tree.dialog.create} onCancel={this.props.closeTreeDialog} onOk={this.createTreeModel} >
         <p>ชื่อต้นไม้</p>
         <p><Input placeholder='ชื่อ' value={name} onChange={(e) => this.setState({name: e.target.value})} /></p>
         <p>ชื่อวิทยาศาสตร์</p>
@@ -63,6 +65,8 @@ export default class CreateTreeDialog extends React.Component {
 }
 
 CreateTreeDialog.propTypes = {
-  closeDialog: PropTypes.func.isRequired,
-  visible: PropTypes.bool.isRequired
+  store: PropTypes.object.isRequired,
+  closeTreeDialog: PropTypes.func.isRequired
 }
+
+export default connect(CreateTreeDialog)

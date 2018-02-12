@@ -22,7 +22,7 @@ class BigMap extends React.Component {
     this.props.loadMap()
   }
 
-  async componentWillReceiveProps (nextProps) {
+  async componentWillReceiveProps (nextProps) { // รับค่า url ของรูป
     if (nextProps.store.maps.loading === false) {
       const url = await firebase.storage().ref(nextProps.store.maps.data.mainMap.imgPath).getDownloadURL()
       this.setState({
@@ -38,7 +38,7 @@ class BigMap extends React.Component {
     )
   }
 
-  MapNivigate (event, index) {
+  MapNivigate (event, index) { // เปลี่ยนหน้า
     this.props.history.push(this.props.store.maps.data.mainMap.link[index].path)
   }
 

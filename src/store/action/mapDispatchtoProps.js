@@ -73,6 +73,35 @@ export default (dispatch) => {
         type: '@@SET_MOCK',
         payload: status
       })
+    },
+    openCreateTreeDialog: () => {
+      dispatch({
+        type: '@@OPEN_TREE_DIALOG_CREATE'
+      })
+    },
+    openEditTreeDialog: (id) => {
+      dispatch({
+        type: '@@OPEN_TREE_DIALOG_EDIT',
+        payload: id
+      })
+    },
+    openDeleteTreeDialog: (id) => {
+      dispatch({
+        type: '@@OPEN_TREE_DIALOG_DELETE',
+        payload: id
+      })
+    },
+    closeTreeDialog: () => {
+      dispatch({
+        type: '@@CLOSE_TREE_DIALOG'
+      })
+    },
+    deleteTree: (id) => {
+      dispatch({
+        type: '@@CLOSE_TREE_DIALOG'
+      })
+      firebase.database().ref(`/tree/data/${id}`).remove().then(() => {
+      })
     }
   }
 }

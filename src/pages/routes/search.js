@@ -1,9 +1,10 @@
-import React from 'react'
-import { Input, List, Card } from 'antd'
 import _ from 'lodash'
+import { Input, List, Card } from 'antd'
 import { Link } from 'react-router-dom'
-import connect from '../../store/action'
 import PropTypes from 'prop-types'
+import React from 'react'
+
+import connect from '../../store/action'
 
 const { Search } = Input
 
@@ -19,10 +20,10 @@ class SearchBox extends React.Component {
   }
 
   componentWillMount () {
-    this.props.loadTree()
+    this.props.loadTree() // โหลดต้นไม้
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps (nextProps) { // นำค่าต้นไม้ทั้งหมดมา
     if (nextProps.store.tree.loading === false) {
       const allTree = Object.keys(nextProps.store.tree.location).map((key) => ({ ...nextProps.store.tree.location[key], id: key }))
       this.setState({allTree})
@@ -30,9 +31,9 @@ class SearchBox extends React.Component {
   }
 
   search (keyword) {
-    if (keyword !== '') {
-      const searched = _.filter(this.state.allTree, (o) => { return this.props.store.tree.data[o.tree].name.toUpperCase().indexOf(keyword.toUpperCase()) !== -1 || this.props.store.tree.data[o.tree].scienceName.toUpperCase().indexOf(keyword.toUpperCase()) !== -1 })
-      this.setState({searched})
+    if (keyword !== '') { // เช็คว่า keyword ว่างหรือไม่
+      const searched = _.filter(this.state.allTree, (o) => { return this.props.store.tree.data[o.tree].name.toUpperCase().indexOf(keyword.toUpperCase()) !== -1 || this.props.store.tree.data[o.tree].scienceName.toUpperCase().indexOf(keyword.toUpperCase()) !== -1 }) // กรองค่าที่ค้นหาแล้ว
+      this.setState({searched}) // เช็ทค่าผลลัพท์
     }
   }
   render () {
@@ -66,7 +67,6 @@ class SearchBox extends React.Component {
             </List.Item>
           )}
         />
-        {/* <Table pagination={false} columns={TableColumn} dataSource={this.state.searched} /> */}
       </Card>
     )
   }

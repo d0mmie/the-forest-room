@@ -3,7 +3,7 @@ import React from 'react'
 
 import { Routes } from './route'
 
-export default class RouterSwitch extends Switch {
+export default class RouterSwitch extends Switch { // ทำ Route เป็น component
   render () {
     return (
       <div>

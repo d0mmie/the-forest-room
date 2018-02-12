@@ -39,7 +39,7 @@ const TreeDetail = Loadable({
   loader: () => import(/* webpackChunkName: "TreeDetail" */ './routes/treeDetail')
 })
 
-export const Routes = [
+export const Routes = [ // ทำ Route
   {
     path: '/tree',
     component: Tree,
