@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 
 import connect from '../../store/action'
-import ImageMapper from '../../libs/ImageMapper'
+import ImageMapper from 'react-image-mapper'
 
 class PrimaryMap extends React.Component {
   constructor (props) {

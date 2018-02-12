@@ -6062,11 +6062,12 @@ react-error-overlay@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-3.0.0.tgz#c2bc8f4d91f1375b3dad6d75265d51cd5eeaf655"
 
-react-image-mapper@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/react-image-mapper/-/react-image-mapper-0.0.4.tgz#1dff8d9593ca063cb99ed1cd17ddaf2014b3c961"
+react-image-mapper@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/react-image-mapper/-/react-image-mapper-0.0.5.tgz#27eaa6ff11e8fd8a6f8e25611538933dd9014391"
   dependencies:
     classnames "^2.1.2"
+    prop-types "^15.6.0"
 
 react-lazy-load@^3.0.12:
   version "3.0.13"
