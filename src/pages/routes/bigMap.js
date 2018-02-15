@@ -57,7 +57,7 @@ class BigMap extends React.Component {
             width={704}
           />
         }
-        <a target='_blank' href='http://kp.ac.th'><img style={{position: 'fixed', right: 10, bottom: 10, zIndex: 999}} width={100} src='https://data.bopp-obec.info/emis/pic_school/1062040430.jpg' alt=''/></a>
+        <a target='_blank' rel='noopener noreferrer' href='http://kp.ac.th'><img style={{position: 'fixed', right: 10, bottom: 10, zIndex: 999}} width={100} src='https://data.bopp-obec.info/emis/pic_school/1062040430.jpg' alt=''/></a>
       </Card>
     )
   }
