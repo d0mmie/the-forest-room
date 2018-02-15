@@ -102,6 +102,21 @@ export default (dispatch) => {
       })
       firebase.database().ref(`/tree/data/${id}`).remove().then(() => {
       })
+    },
+    loadUsers: () => {
+      firebase.database().ref(`/users`).on('value', (snap) => {
+        if (snap.val()) {
+          dispatch({
+            type: '@@LOAD_USERS',
+            payload: snap.val()
+          })
+        }
+      })
+    },
+    disloadUsers: () => {
+      dispatch({
+        type: '@@REMOVE_USERS'
+      })
     }
   }
 }

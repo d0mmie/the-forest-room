@@ -63,14 +63,15 @@ class Tree extends React.Component {
             <List.Item
               key={item.key}
               extra={<img src={item.image} alt={item.name} width={272} />}
-              actions={[
-                <IconText action={() => this.props.openEditTreeDialog(item.key)} type='edit' text='แก้ไข' />,
-                <IconText action={() => this.props.openDeleteTreeDialog(item.key)} type='delete' text='ลบ' />
-              ]}
+              actions={this.props.store.user.data.isAdmin &&
+                [
+                  <IconText action={() => this.props.openEditTreeDialog(item.key)} type='edit' text='แก้ไข' />,
+                  <IconText action={() => this.props.openDeleteTreeDialog(item.key)} type='delete' text='ลบ' />
+                ]}
             >
               <List.Item.Meta
                 title={<Link to={`/tree/${item.key}`}>{item.name}</Link>}
-                description={item.scienceName}
+                description={<i>{item.scienceName}</i>}
               />
               {item.detail}
             </List.Item>
