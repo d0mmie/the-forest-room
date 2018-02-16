@@ -37,8 +37,8 @@ class Tree extends React.Component {
     this.props.loadTree() // โหลดต้นไม้
   }
   componentWillReceiveProps (nextProps) { // เซ็ทค่าต้นไม้
-    const tree = Object.keys(nextProps.store.tree.data).map((key) => ({...nextProps.store.tree.data[key], key}))
-    this.setState({allTree: tree})
+    const tree = Object.keys(nextProps.store.tree.data).map((key) => ({...nextProps.store.tree.data[key], key})) // ทำตัวแปรข้อมูลต้นไม้ให้เป็น array และใส่ id เข้าไปในข้อมูลเช่น {name: "มะม่วง"} เป็น {id:"-L1rHwzEgOZ-ggf_Mxf7", name:"มะม่วง"}
+    this.setState({allTree: tree}) // เซ็ทค่าต้นไม้ไว้เรียกใช้
   }
 
   render () {

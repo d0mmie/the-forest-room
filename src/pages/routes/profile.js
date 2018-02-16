@@ -9,11 +9,11 @@ import ManageUser from '../../components/manageUser'
 
 class Profile extends React.Component {
   loginWithGmail () { // เข้าสู่ระบบด้วย popup gmail
-    firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
+    firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()) // โชว์ popup ล้อกอิน
   }
 
   componentWillMount () {
-    this.props.loadUsers()
+    this.props.loadUsers() // โหลดข้อมูลผู้ใช้อื่นทั้งหมด
   }
 
   render () {

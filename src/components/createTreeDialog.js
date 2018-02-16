@@ -21,7 +21,7 @@ class CreateTreeDialog extends React.Component {
     this.createTreeModel = this.createTreeModel.bind(this)
   }
 
-  createTreeModel () {
+  createTreeModel () { // สร้างข้อมูลต้นไม้
     firebase.database().ref('/tree/data').push(this.state).then(() => {
       this.props.closeTreeDialog()
     })

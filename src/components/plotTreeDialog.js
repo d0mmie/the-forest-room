@@ -16,7 +16,7 @@ class PlotTreeDialog extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    this.setState({selectedKey: Object.keys(this.props.store.tree.data)[0]})
+    this.setState({selectedKey: Object.keys(this.props.store.tree.data)[0]}) // เซ็ทตัวเลือกเริ่มต้นเป็นข้อมูลตัวแรก
   }
 
   plot () {

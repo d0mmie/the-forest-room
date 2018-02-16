@@ -21,9 +21,9 @@ class PrimaryMap extends React.Component {
   }
 
   async componentWillReceiveProps (nextProps) { // รับค่า รูปของแผนที่
-    if (nextProps.store.maps.loading === false) {
-      const url = await firebase.storage().ref(nextProps.store.maps.data[nextProps.match.params.mapId].imgPath).getDownloadURL()
-      this.setState({
+    if (nextProps.store.maps.loading === false) { // ถ้าแมพโหลดเสร็จแล้ว
+      const url = await firebase.storage().ref(nextProps.store.maps.data[nextProps.match.params.mapId].imgPath).getDownloadURL() // รับ url ของแมพจาก path
+      this.setState({ // นำ url ที่ได้เก็บไว้เรียกใช้
         mapUrl: url
       })
     }

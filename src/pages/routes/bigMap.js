@@ -19,7 +19,7 @@ class BigMap extends React.Component {
   }
 
   componentWillMount () {
-    this.props.loadMap()
+    this.props.loadMap() // โหลดข้อมูลแมพทั้งหมด
   }
 
   async componentWillReceiveProps (nextProps) { // รับค่า url ของรูป

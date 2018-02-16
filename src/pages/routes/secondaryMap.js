@@ -36,15 +36,14 @@ class SecondaryMap extends Component {
   }
 
   async componentWillReceiveProps (nextProps) {
-    if (nextProps.store.maps.loading === false && nextProps.store.tree.loading === false) { // เช็คว่า loading อยู่หรือเปล่า
-      const { primary, secondary } = nextProps.match.params
-      const _allTree = Object.keys(nextProps.store.tree.location).map((key) => ({ ...nextProps.store.tree.location[key], id: key }))
-      console.log(_allTree)
-      const allTree = _.filter(_allTree, { primary, secondary })
-      const treeGroup = _.groupBy(allTree, 'tree')
-      const treeGroupDataSource = Object.keys(treeGroup).map((key) => { return { ...nextProps.store.tree.data[key], amount: treeGroup[key].length, id: key } })
-      const url = await firebase.storage().ref(nextProps.store.maps.data[nextProps.match.params.primary][nextProps.match.params.secondary][nextProps.store.maps.mock ? 'imgPathMock' : 'imgPath']).getDownloadURL()
-      this.setState({url, trees: allTree, treeGroupDataSource})
+    if (nextProps.store.maps.loading === false && nextProps.store.tree.loading === false) { // เช็คว่าโหลดเสร็จหรือยัง
+      const { primary, secondary } = nextProps.match.params // รับ parameter จาก url 2 ค่าคือ primary และ secondary ประมาณนี้ /map/4/11 คือ primary = 4 และ secondary = 11
+      const _allTree = Object.keys(nextProps.store.tree.location).map((key) => ({ ...nextProps.store.tree.location[key], id: key })) // นำจุดที่พลอทต้นไม้ทั้งหมดใส่ id ลงไปใน object เช่น {tree:"-L1rHwzEgOZ-ggf_Mxf7"} เป็น {id:"-L5OQtQRriZXwBLHlrRu", tree="-L1rHwzEgOZ-ggf_Mxf7"}
+      const allTree = _.filter(_allTree, { primary, secondary }) // กรองข้อมูลจุด เอาเฉพาะที่อยู่หน้านี้เท้านั้น
+      const treeGroup = _.groupBy(allTree, 'tree') // จัดกลุ่มโดยชนิดของต้นไม้
+      const treeGroupDataSource = Object.keys(treeGroup).map((key) => { return { ...nextProps.store.tree.data[key], amount: treeGroup[key].length, id: key } }) // นำกลุ่มต้นไม้ที่จัดมาใส่ค่า จำนวน และ id
+      const url = await firebase.storage().ref(nextProps.store.maps.data[nextProps.match.params.primary][nextProps.match.params.secondary][nextProps.store.maps.mock ? 'imgPathMock' : 'imgPath']).getDownloadURL() // นำ url มาโดยใช้ path อ้างอิง
+      this.setState({url, trees: allTree, treeGroupDataSource}) // เซ็ทค่า url ของแมพ, ต้นไม่ที่กรองมาแล้วทั้งหมด, ต้นไม่ที่จัดกลุ่มและนับจำนวนแล้ว ไว้เรียกใช้
     }
   }
 

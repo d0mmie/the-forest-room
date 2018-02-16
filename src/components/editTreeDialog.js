@@ -21,14 +21,14 @@ class EditTreeDialog extends React.Component {
     this.updateTreeModel = this.updateTreeModel.bind(this)
   }
 
-  updateTreeModel () {
+  updateTreeModel () { // อัพเดทข้อมูล
     firebase.database().ref(`/tree/data/${this.props.store.tree.dialog.selected}`).set(this.state).then(() => {
-      this.props.closeTreeDialog()
+      this.props.closeTreeDialog() // ถ้าอัพเดทเสร็จก็ปิด Dialog
     })
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.store.tree.dialog.selected !== '') {
+    if (nextProps.store.tree.dialog.selected !== '') { // ถ้าข้อมูลที่สนใจไม่ว่างเปล่า จึงโหลดข้อมูล
       firebase.database().ref(`/tree/data/${nextProps.store.tree.dialog.selected}`).once('value').then((snap) => {
         this.setState(snap.val())
       })
