@@ -24,15 +24,15 @@ class SearchBox extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) { // นำค่าต้นไม้ทั้งหมดมา
-    if (nextProps.store.tree.loading === false) {
-      const allTree = Object.keys(nextProps.store.tree.location).map((key) => ({ ...nextProps.store.tree.location[key], id: key }))
-      this.setState({allTree})
+    if (nextProps.store.tree.loading === false) { // เช็คว่าโหลดต้นไม้เสร็จรึยัง
+      const allTree = Object.keys(nextProps.store.tree.location).map((key) => ({ ...nextProps.store.tree.location[key], id: key })) // ทำตัวแปรข้อมูลต้นไม้ให้เป็น array และใส่ id เข้าไปในข้อมูลเช่น {name: "มะม่วง"} เป็น {id:"-L1rHwzEgOZ-ggf_Mxf7", name:"มะม่วง"}
+      this.setState({allTree}) // น้ำค่าที่ได้ไปเก็บไว้เรียกใช้
     }
   }
 
   search (keyword) {
     if (keyword !== '') { // เช็คว่า keyword ว่างหรือไม่
-      const searched = _.filter(this.state.allTree, (o) => { return this.props.store.tree.data[o.tree].name.toUpperCase().indexOf(keyword.toUpperCase()) !== -1 || this.props.store.tree.data[o.tree].scienceName.toUpperCase().indexOf(keyword.toUpperCase()) !== -1 }) // กรองค่าที่ค้นหาแล้ว
+      const searched = _.filter(this.state.allTree, (o) => { return this.props.store.tree.data[o.tree].name.toUpperCase().indexOf(keyword.toUpperCase()) !== -1 || this.props.store.tree.data[o.tree].scienceName.toUpperCase().indexOf(keyword.toUpperCase()) !== -1 }) // กรองค่าที่ค้นหาแล้ว โดยเช็คว่ามี keyword อยู่ในชื่อหรือ ชื่วิทยาศาสตร์รึเปล่า
       this.setState({searched}) // เช็ทค่าผลลัพท์
     }
   }

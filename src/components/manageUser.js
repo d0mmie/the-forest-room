@@ -8,7 +8,7 @@ import connect from '../store/action'
 class ManageUser extends React.Component {
 
   manageAdmin (checked, uid) {
-    firebase.database().ref(`/users/${uid}`).update({
+    firebase.database().ref(`/users/${uid}`).update({ // เปลี่ยนสถานะของ user เป็นตามตัวเช็ค
       isAdmin: checked
     })
   }

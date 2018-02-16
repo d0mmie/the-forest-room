@@ -33,10 +33,10 @@ class TreeDetail extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) { // กรอง map ที่้ต้นไม้อยู่
-    const groupedTree = _.filter(nextProps.store.tree.location, (o) => o.tree === nextProps.match.params.treeId)
-    const groupedAppend = groupedTree.map((val) => ({primary: val.primary, secondary: val.secondary}))
-    const uniqueAppend = _.uniqBy(groupedAppend, JSON.stringify)
-    this.setState({appendIn: uniqueAppend})
+    const groupedTree = _.filter(nextProps.store.tree.location, (o) => o.tree === nextProps.match.params.treeId) // จับกลุ่มต้นไม้ชนิดเดียวกันจากข้อมูลจุดที่พลอท
+    const groupedAppend = groupedTree.map((val) => ({primary: val.primary, secondary: val.secondary})) // เปลี่ยนต้นไม้แต่ละต้นให้มีแค่ primary และ secondary
+    const uniqueAppend = _.uniqBy(groupedAppend, JSON.stringify) // หำจัดตัวซ้ำ
+    this.setState({appendIn: uniqueAppend}) // เซ็ทค่าที่ได้มาไว้เรียกใช้
   }
 
   render () {

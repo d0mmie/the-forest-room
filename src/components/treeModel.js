@@ -14,7 +14,7 @@ class TreeModel extends Component {
   }
 
   deletePlot () {
-    firebase.database().ref(`/tree/location/${this.props.id}`).remove()
+    firebase.database().ref(`/tree/location/${this.props.id}`).remove() // ลบจุดทิ้ง
   }
 
   render () {
